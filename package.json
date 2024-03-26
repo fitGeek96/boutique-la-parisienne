@@ -1,0 +1,23 @@
+{
+  "name": "la-parisienne",
+  "version": "1.0.0",
+  "description": "An E-comm Store to sell women'shoes and handbags",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fitGeek96/boutique-la-parisienne.git"
+  },
+  "author": "Tahar B.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fitGeek96/boutique-la-parisienne/issues"
+  },
+  "homepage": "https://github.com/fitGeek96/boutique-la-parisienne#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
