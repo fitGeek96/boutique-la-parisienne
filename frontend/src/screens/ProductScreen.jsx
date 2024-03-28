@@ -3,6 +3,9 @@ import { Row, Col, Image, ListGroup, Card, Button } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import Rating from "../components/Rating";
 import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
+import Loader from "../components/Loader";
+import Message from "../components/Message";
+
 // import axios from "axios";
 
 const ProductScreen = () => {
@@ -30,8 +33,12 @@ const ProductScreen = () => {
       <Link to="/" className="btn btn-light my-3">
         Go Back
       </Link>
-      {isLoading && <h1>Loading...</h1>}
-      {isError && <h1>{isError.message}</h1>}
+      {isLoading && <Loader />}
+      {isError && (
+        <Message variant={"danger"}>
+          {isError?.data?.message || isError.error}
+        </Message>
+      )}
       <Row>
         <Col md={5}>
           <Image src={product?.image} alt={product?.name} fluid />
