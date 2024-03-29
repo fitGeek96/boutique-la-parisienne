@@ -20,7 +20,7 @@ import { addToCart } from "../slices/cartSlice";
 const ProductScreen = () => {
   const { id: productId } = useParams();
 
-  const [qty, setQty] = useState();
+  const [qty, setQty] = useState(1);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
