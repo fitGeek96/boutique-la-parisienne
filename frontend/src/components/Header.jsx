@@ -31,10 +31,10 @@ const Header = () => {
               <LinkContainer to={"/cart"}>
                 <Nav.Link>
                   <FaShoppingCart />
-                  {cartItems.length ? (
+                  {cartItems?.length ? (
                     <Badge pill bg="danger">
                       {" "}
-                      {cartItems.length}{" "}
+                      {cartItems?.length}{" "}
                     </Badge>
                   ) : (
                     ""

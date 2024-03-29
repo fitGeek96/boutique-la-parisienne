@@ -11,12 +11,12 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const item = action.payload;
-      const existItem = state.cartItems.find(
+      const existItem = state.cartItems?.find(
         (currentItem) => currentItem._id === item._id,
       );
 
       if (existItem) {
-        state.cartItems = state.cartItems.map((currentItem) =>
+        state.cartItems = state.cartItems?.map((currentItem) =>
           currentItem._id === existItem._id ? item : currentItem,
         );
       } else {
