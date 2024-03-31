@@ -30,7 +30,7 @@ const LoginScreen = () => {
       navigate(redirect);
       toast.success("Vous êtes connecté!");
     } catch (err) {
-      toast.error(err?.data.message || err?.error);
+      toast.error("Invalid email or password");
     }
   };
 
