@@ -1,17 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Form, Row, Button, Col } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
+import Loader from "../components/Loader";
+import { useLoginMutation } from "../slices/usersApiSlice";
+import { setCredentials } from "../slices/authSlice";
+import { toast } from "react-toastify";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [login, { isLoading }] = useLoginMutation();
 
-  const submitHandler = (e) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { search } = useLocation();
+  const query = new URLSearchParams(search);
+  const redirect = query.get("redirect") || "/";
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log("submit");
+    try {
+      const res = await login({ email, password }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      navigate(redirect);
+      toast.success("Vous êtes connecté!");
+    } catch (err) {
+      toast.error(err?.data.message || err?.error);
+    }
   };
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [userInfo, navigate, redirect]);
 
   return (
     <FormContainer>
@@ -36,15 +63,26 @@ const LoginScreen = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-        <Button variant="danger" type="submit" className="mt-3 text-white">
+        <Button
+          variant="danger"
+          type="submit"
+          className="mt-3 text-white"
+          disabled={isLoading === true}
+        >
           Se Connecter
         </Button>
+        {isLoading && <Loader />}
       </Form>
       <Row className="mt-3">
         <Col>
           <strong>
             {" "}
-            Nouvelle Cliente? <Link to="/register">S'enregistrer</Link>
+            Nouvelle Cliente?{" "}
+            <Link
+              to={redirect ? `/register?redirect=${redirect}` : "/register"}
+            >
+              S'enregistrer
+            </Link>
           </strong>
         </Col>
       </Row>
