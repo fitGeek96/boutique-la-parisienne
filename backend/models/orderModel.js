@@ -28,8 +28,11 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     shippingAddress: {
-      name: {
+      fullname: {
         type: String,
+      },
+      phone: {
+        type: Number,
       },
       address: {
         type: String,
@@ -37,19 +40,16 @@ const orderSchema = new mongoose.Schema(
       city: {
         type: String,
       },
-      state: {
-        type: String,
-      },
-      zipcode: {
-        type: Number,
-      },
+      // state: {
+      //   type: String,
+      // },
+      // zipcode: {
+      //   type: Number,
+      // },
       // country: {
       //   type: String,
       //   required: true
       // },
-      phone: {
-        type: Number,
-      },
     },
     paymentMethod: {
       type: String,
