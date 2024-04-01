@@ -53,8 +53,11 @@ const getMyOrders = expressAsyncHandler(async (req, res) => {
 // @access  Private/Admin
 
 const getOrderById = expressAsyncHandler(async (req, res) => {
-  const order = await Order.findById(req.params.id).populate({'user', 'name', 'email'});
-  
+  const order = await Order.findById(req.params.id).populate(
+    "user",
+    "name email",
+  );
+
   if (order) {
     res.status(200).json(order);
   } else {
