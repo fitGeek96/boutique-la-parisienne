@@ -75,7 +75,7 @@ const ShippingScreen = () => {
             onChange={(e) => setCity(e.target.value)}
           />
         </Form.Group>
-        <Button type="submit" variant="primary" className="my-5 w-100">
+        <Button type="submit" variant="info" className="my-5 w-100 text-white fw-bold">
           Continuer
         </Button>
       </Form>
