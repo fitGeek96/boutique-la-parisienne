@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { saveShippingAddress } from "../slices/cartSlice";
+import CheckoutSteps from "../components/CheckoutSteps";
 
 const ShippingScreen = () => {
   const cart = useSelector((state) => state.cart);
@@ -37,34 +38,37 @@ const ShippingScreen = () => {
 
   return (
     <FormContainer>
-      <h4>Remplissez les champs requis pour la livraison</h4>
+      <CheckoutSteps step1 step2 />
+      <h6 className="text-info">
+        Remplissez les champs requis pour la livraison
+      </h6>
       <Form onSubmit={submitHandler}>
-        <Form.Group controlId="fullname">
-          <Form.Label>Nom et prénom</Form.Label>
+        <Form.Group controlId="fullname" className="mt-2">
+          <Form.Label as="h6">Nom et prénom</Form.Label>
           <Form.Control
             type="text"
             value={fullname}
             onChange={(e) => setFullname(e.target.value)}
           />
         </Form.Group>
-        <Form.Group controlId="phone">
-          <Form.Label>Numéro de téléphone</Form.Label>
+        <Form.Group controlId="phone" className="mt-2">
+          <Form.Label as="h6">Numéro de téléphone</Form.Label>
           <Form.Control
             type="text"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
         </Form.Group>
-        <Form.Group controlId="address">
-          <Form.Label>Adresse</Form.Label>
+        <Form.Group controlId="address" className="mt-2">
+          <Form.Label as="h6">Adresse</Form.Label>
           <Form.Control
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
         </Form.Group>
-        <Form.Group controlId="phone">
-          <Form.Label>Wilaya</Form.Label>
+        <Form.Group controlId="phone" className="mt-2">
+          <Form.Label as="h6">Wilaya</Form.Label>
           <Form.Control
             type="text"
             value={city}
