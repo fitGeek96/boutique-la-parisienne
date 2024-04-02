@@ -55,7 +55,7 @@ const ProductScreen = () => {
 
   return (
     <>
-      <Link to="/" className="btn btn-light my-3">
+      <Link to="/" className="btn btn-light my-3 ms-3">
         Go Back
       </Link>
       {isLoading && <Loader />}
@@ -66,7 +66,11 @@ const ProductScreen = () => {
       )}
       <Row>
         <Col md={5}>
-          <Image src={product?.image} alt={product?.name} fluid />
+          <ListGroup variant="flush">
+            <ListGroup.Item>
+              <Image src={product?.image} alt={product?.name} fluid rounded />
+            </ListGroup.Item>
+          </ListGroup>
         </Col>
         <Col md={4}>
           <ListGroup variant="flush">

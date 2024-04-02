@@ -37,7 +37,7 @@ const CartScreen = () => {
   return (
     <Container>
       <Row>
-        <Col md={8}>
+        <Col md={8} xs={12}>
           <h1 className="mb-3">Panier</h1>
           {cartItems.length === 0 ? (
             <Message variant={"info"}>
@@ -48,30 +48,43 @@ const CartScreen = () => {
               {cartItems?.map((item) => (
                 <ListGroup.Item key={item._idid}>
                   <Row>
-                    <Col md={2}>
+                    <Col md={2} xs={5} className="p-0">
                       <Image
                         src={item.image}
                         alt={item.name}
-                        className="w-100"
+                        className="align-self-center"
+                        style={{ width: "80%" }}
                         fluid
                         rounded
                       />
                     </Col>
-                    <Col md={3} className="text-center my-2">
+                    <Col
+                      md={3}
+                      xs={7}
+                      className="text-center align-self-center"
+                    >
                       <Link to={`/products/${item._id}`}>{item.name}</Link>
                     </Col>
-                    <Col md={2} className="text-center my-2">
+                    <Col
+                      md={2}
+                      xs={4}
+                      className="text-center mx-auto align-self-center"
+                    >
                       {" "}
                       <strong> DA {item.price} </strong>
                     </Col>
-                    <Col md={3} className="text-center my-2">
+                    <Col
+                      md={3}
+                      xs={4}
+                      className="text-center my-2 mx-auto align-self-center"
+                    >
                       <Form.Control
                         as="select"
                         value={item.qty}
                         onChange={(e) =>
                           addToCartHandler(item, Number(e.target.value))
                         }
-                        className="text-center py- m-auto w-50"
+                        className="text-center mx-auto w-50"
                       >
                         {Array.from({ length: item?.countInStock }, (v, i) => (
                           <option key={i} value={i + 1}>
@@ -80,13 +93,18 @@ const CartScreen = () => {
                         ))}
                       </Form.Control>
                     </Col>
-                    <Col md={2} className="text-center my-2">
+                    <Col
+                      md={2}
+                      xs={4}
+                      className="text-center align-self-center"
+                    >
                       <Button
                         variant="outline-danger"
                         size="sm"
                         onClick={() => removeFromCartHandler(item._id)}
+                        className="py-2"
                       >
-                        <FaTrash />
+                        <FaTrash size={20} />
                       </Button>
                     </Col>
                   </Row>
@@ -95,7 +113,7 @@ const CartScreen = () => {
             </ListGroup>
           )}
         </Col>
-        <Col md={4}>
+        <Col md={4} sm={12} xs={12} className="mt-5">
           <Card>
             <ListGroup variant="flush">
               <ListGroup.Item>
@@ -111,15 +129,15 @@ const CartScreen = () => {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
-                  <Col>
+                  <Col className="text-center">
                     <Button
                       variant="success text-white"
                       size="sm"
-                      className="btn-block w-100"
+                      className="w-70 p-2"
                       onClick={checkoutHandler}
                       disabled={cartItems.length === 0}
                     >
-                      Valider la Commande
+                      <strong> Valider la Commande</strong>
                     </Button>
                   </Col>
                 </Row>
