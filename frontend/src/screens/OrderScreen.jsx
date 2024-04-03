@@ -18,6 +18,7 @@ const OrderScreen = () => {
 
   const {
     data: paypal,
+    refetch,
     isLoading: loadingPayPal,
     error: errorPayPal,
   } = useGetPayPalClientIdQuery();
@@ -52,6 +53,47 @@ const OrderScreen = () => {
       }
     }
   }, [order, paypal, loadingPayPal, errorPayPal, paypalDispatch]);
+
+  const onApprove = (data, actions) => {
+    return actions.order.capture().then(async (details) => {
+      try {
+        await payOrder({ orderId, details }).unwrap();
+        refetch();
+        toast.success("Payment successful!");
+      } catch (err) {
+        toast.error(err?.data?.message);
+      }
+    });
+  };
+
+  const onApproveTest = async (params) => {
+    await payOrder({ orderId, details: { payer: {} } }).unwrap();
+    refetch();
+    toast.success("Payment successful!");
+  };
+
+  const onPayPalError = (params) => {};
+
+  const onError = (err) => {
+    toast.error(err.message);
+  };
+
+  const createOrder = (data, actions) => {
+    return actions.order
+      .create({
+        purchase_units: [
+          {
+            amount: {
+              currency_code: "USD",
+              value: order.totalPrice,
+            },
+          },
+        ],
+      })
+      .then((orderId) => {
+        return orderId;
+      });
+  };
 
   return (
     <>
@@ -167,6 +209,30 @@ const OrderScreen = () => {
                 </Row>
               </ListGroup.Item>
               {/* PAY ORDER PLACEHOLDER */}
+              {!order?.isPaid && (
+                <ListGroup.Item>
+                  {paymentLoading && <Loader />}
+                  {isPending && <Loader />}
+                  <Row>
+                    <Col className="text-center">
+                      {/* <Button
+                        variant="success text-white"
+                        size="sm"
+                        className="w-70 p-2"
+                        onClick={onApproveTest}
+                        disabled={paymentLoading}
+                      >
+                        Payer Test
+                      </Button> */}
+                      <PayPalButtons
+                        createOrder={createOrder}
+                        onApprove={onApprove}
+                        onError={onPayPalError}
+                      />
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              )}
               {/* MARK AS DILIVERED*/}
             </ListGroup>
           </Card>
