@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Table, Form, Button, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { FaTimes } from "react-icons/fa";
+
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+
 import { useProfileMutation } from "../slices/usersApiSlice";
+import { useGetMyOrdersQuery } from "../slices/ordersApiSlice";
+
 import { setCredentials } from "../slices/authSlice";
 
 const ProfileScreen = () => {
@@ -19,6 +25,11 @@ const ProfileScreen = () => {
   const { userInfo } = useSelector((state) => state.auth);
 
   const [updateProfile, { isLoading, error }] = useProfileMutation();
+  const {
+    data: myOrders,
+    isLoading: isLoadingOrders,
+    error: myOrderError,
+  } = useGetMyOrdersQuery();
 
   useEffect(() => {
     if (userInfo) {
@@ -97,7 +108,57 @@ const ProfileScreen = () => {
           {isLoading && <Loader />}
         </Form>
       </Col>
-      <Col md={9}>Col</Col>
+      <Col md={9}>
+        <h3>Mes Commandes</h3>
+        {isLoadingOrders && <Loader />}
+        {myOrderError && (
+          <Message variant="danger">{myOrderError?.data?.message}</Message>
+        )}
+        <Table striped hover responsive className="table-sm">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Payé</th>
+              <th>Livré</th>
+            </tr>
+          </thead>
+          <tbody>
+            {myOrders?.map((order) => (
+              <tr key={order?._id}>
+                <td>{order?._id.substring(0, 10)}</td>
+                <td>{order?.createdAt.substring(0, 10)}</td>
+                <td className="text-info">
+                  {" "}
+                  <strong> DA {order?.totalPrice} </strong>{" "}
+                </td>
+                <td>
+                  {order.isPaid ? (
+                    order.paidAt.substring(0, 10)
+                  ) : (
+                    <FaTimes className="text-danger" />
+                  )}
+                </td>
+                <td>
+                  {order.isDelivered ? (
+                    order.deliveredAt.substring(0, 10)
+                  ) : (
+                    <FaTimes className="text-danger" />
+                  )}
+                </td>
+                <td>
+                  <LinkContainer to={`/orders/${order?._id}`}>
+                    <Button variant="primary" size="sm" className="text-white">
+                      Voir
+                    </Button>
+                  </LinkContainer>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </Col>
     </Row>
   );
 };

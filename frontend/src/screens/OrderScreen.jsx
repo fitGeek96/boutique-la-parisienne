@@ -1,6 +1,14 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button, ListGroup, Image, Card, Row, Col } from "react-bootstrap";
+import {
+  Button,
+  ListGroup,
+  Image,
+  Card,
+  Row,
+  Col,
+  Table,
+} from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
@@ -66,16 +74,8 @@ const OrderScreen = () => {
     });
   };
 
-  const onApproveTest = async (params) => {
-    await payOrder({ orderId, details: { payer: {} } }).unwrap();
-    refetch();
-    toast.success("Payment successful!");
-  };
-
-  const onPayPalError = (params) => {};
-
-  const onError = (err) => {
-    toast.error(err.message);
+  const onPayPalError = (params) => {
+    toast.error("PayPal payment error.");
   };
 
   const createOrder = (data, actions) => {
@@ -99,131 +99,134 @@ const OrderScreen = () => {
     <>
       {isLoading && <Loader />}
       {error && <Message variant="danger">{error.data?.message}</Message>}
-      <h2 className="text-warning">Commande {order?._id}</h2>
+      <h3 className="text-warning">
+        ID Commande : {order?._id.substring(0, 10)}
+      </h3>
       <Row>
-        <Col md={8}>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              <h2 className="text-info">Livraison</h2>
-              <Row>
-                <Col md={6}>
-                  <p>
-                    Nom et Prenom :{" "}
-                    <strong>{order?.shippingAddress?.fullname}</strong>
-                  </p>
-
-                  <p>
-                    Email : <strong>{order?.user?.email}</strong>
-                  </p>
-                  <p>
-                    {" "}
-                    Adresse:{" "}
-                    <strong>
-                      {" "}
-                      {order?.shippingAddress?.address},{" "}
-                      {order?.shippingAddress?.city}
-                    </strong>
-                  </p>
-                  <p>
-                    {" "}
-                    Numéro de Téléphone:{" "}
-                    <strong>{order?.shippingAddress?.phone}</strong>
-                  </p>
-                  {order?.isDelivered ? (
-                    <Message variant={"success"}>
-                      Votre commande a bien été effectuée
-                    </Message>
-                  ) : (
-                    <Message variant={"danger"}>
-                      Votre commande n'est pas encore livrée
-                    </Message>
-                  )}
+        <Col md={9}>
+          <Card>
+            <Card.Header>
+              <h4 className="text-info">Informations sur la livraison</h4>
+            </Card.Header>
+            <Card.Body>
+              <Table striped bordered hover responsive className="table-sm">
+                <tbody>
+                  <tr>
+                    <td>Nom et Prenom</td>
+                    <td>
+                      <strong>{order?.shippingAddress?.fullname}</strong>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Adresse</td>
+                    <td>
+                      <strong>
+                        {`${order?.shippingAddress?.address}, ${order?.shippingAddress?.city}`}
+                      </strong>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Numéro de Téléphone</td>
+                    <td>
+                      <strong>{order?.shippingAddress?.phone}</strong>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Statut de Livraison</td>
+                    <td>
+                      {order?.isDelivered ? (
+                        <p className="text-success">
+                          <strong> La Commande a bien été effectuée </strong>
+                        </p>
+                      ) : (
+                        <p className="text-danger">
+                          <strong> La Commande n'est pas encore livrée </strong>
+                        </p>
+                      )}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Statut de Paiment</td>
+                    <td>
+                      {order?.isPaid ? (
+                        <p className="text-success">
+                          <strong> La commande est payée avec succès</strong>
+                        </p>
+                      ) : (
+                        <p className="text-danger">
+                          <strong> La commande n'est pas encore payée</strong>
+                        </p>
+                      )}
+                    </td>
+                  </tr>
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+          <ListGroup.Item className="mt-2">
+            <Card>
+              <Card.Header>
+                <h4 className="text-info">Articles commandés</h4>
+              </Card.Header>
+              <Card.Body>
+                {order?.orderItems?.length === 0 ? (
+                  <Message variant={"info"}>Aucun article trouvé.</Message>
+                ) : (
+                  <Table hover responsive className="table-sm">
+                    <thead>
+                      <tr>
+                        <th>Image</th>
+                        <th>Nom</th>
+                        <th className="text-center">Quantité</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {order?.orderItems?.map((item) => (
+                        <tr key={item.product} className="text-left">
+                          <td className="align-middle">
+                            <Image
+                              src={item.image}
+                              alt={item.name}
+                              fluid
+                              rounded
+                              style={{ width: "80px", height: "auto" }}
+                            />
+                          </td>
+                          <td className="align-middle">
+                            <Link to={`/products/${item.product}`}>
+                              {item.name}
+                            </Link>
+                          </td>
+                          <td className="align-middle">{item.qty}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                )}
+              </Card.Body>
+            </Card>
+          </ListGroup.Item>
+        </Col>
+        <Col md={3}>
+          <Card>
+            <Card.Header>
+              <h5 className="text-center text-info mb-4">
+                Tarification de la commande
+              </h5>
+            </Card.Header>
+            <Card.Body>
+              <Row className="mt-1">
+                <Col>Prix Total:</Col>
+                <Col className="text-center text-success">
+                  <strong>DA {order?.totalPrice}</strong>
                 </Col>
               </Row>
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <h2 className="text-info">Payment Method</h2>
-              <p>
-                <strong>Method: </strong>
-                {order?.paymentMethod}
-              </p>
-              {order?.isPaid ? (
-                <Message variant={"success"}>
-                  Votre commande a bien été effectuée le {order.paidAt}
-                </Message>
-              ) : (
-                <Message variant={"danger"}>
-                  Votre commande n'est pas encore payée
-                </Message>
-              )}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <h2 className="text-info">Commande d'articles</h2>
-              {order?.orderItems?.length === 0 ? (
-                <Message variant={"info"}></Message>
-              ) : (
-                <ListGroup variant="flush">
-                  {order?.orderItems?.map((item) => (
-                    <ListGroup.Item key={item.product}>
-                      <Row>
-                        <Col>
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            fluid
-                            rounded
-                            style={{ width: "auto", height: "auto" }}
-                          />
-                        </Col>
-                        <Col>
-                          <Link to={`/products/${item.product}`}>
-                            {item.name}
-                          </Link>
-                        </Col>
-                        <Col className="text-center">
-                          <p>Quantité</p>
-                          <strong>{item.qty}</strong>
-                        </Col>
-                      </Row>
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              )}
-            </ListGroup.Item>
-          </ListGroup>
-        </Col>
-        <Col md={4}>
-          <Card>
-            <ListGroup variant="flush">
-              <ListGroup.Item>
-                <h5 className="text-center text-info mb-4">
-                  Tarification de la commande
-                </h5>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row className="mt-1">
-                  <Col>Prix Total:</Col>
-                  <Col className="text-center text-success">
-                    <strong>DA {order?.totalPrice}</strong>
-                  </Col>
-                </Row>
-              </ListGroup.Item>
-              {/* PAY ORDER PLACEHOLDER */}
               {!order?.isPaid && (
                 <ListGroup.Item>
                   {paymentLoading && <Loader />}
                   {isPending && <Loader />}
                   <Row>
                     <Col className="text-center">
-                      {/* <Button
-                        variant="success text-white"
-                        size="sm"
-                        className="w-70 p-2"
-                        onClick={onApproveTest}
-                        disabled={paymentLoading}
-                      >
-                        Payer Test
-                      </Button> */}
                       <PayPalButtons
                         createOrder={createOrder}
                         onApprove={onApprove}
@@ -233,8 +236,7 @@ const OrderScreen = () => {
                   </Row>
                 </ListGroup.Item>
               )}
-              {/* MARK AS DILIVERED*/}
-            </ListGroup>
+            </Card.Body>
           </Card>
         </Col>
       </Row>

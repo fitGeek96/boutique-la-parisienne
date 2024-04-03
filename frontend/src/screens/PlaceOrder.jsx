@@ -38,7 +38,8 @@ const PlaceOrder = () => {
       }).unwrap();
 
       dispatch(clearCartItems());
-      navigate(`/orders/${res._id}`);
+      // navigate(`/orders/${res._id}`);
+      navigate(`/`);
       toast.success("Votre commande a bien été effectué!");
     } catch (error) {
       toast.error(error);

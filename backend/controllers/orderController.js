@@ -66,28 +66,32 @@ const getOrderById = expressAsyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Update Order to Paid
-// @route   PUT  /api/orders/:id/pay
+// @desc    Update order to paid
+// @route   PUT /api/orders/:id/pay
 // @access  Private
-
 const updateOrderToPaid = expressAsyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
+    // check the correct amount was paid
+    const paidCorrectAmount = order.totalPrice.toString() === value;
+    if (!paidCorrectAmount) throw new Error("Montant payé incorrect");
+
     order.isPaid = true;
     order.paidAt = Date.now();
     order.paymentResult = {
       id: req.body.id,
       status: req.body.status,
       update_time: req.body.update_time,
-      email: req.body.email,
+      email_address: req.body.payer.email_address,
     };
 
     const updatedOrder = await order.save();
-    res.status(200).json(updatedOrder);
+
+    res.json(updatedOrder);
   } else {
     res.status(404);
-    throw new Error("Order Not Found");
+    throw new Error("Commande introuvable");
   }
 });
 
@@ -104,7 +108,8 @@ const updateOrderToDelivered = expressAsyncHandler(async (req, res) => {
 // @access  Private/Admin
 
 const getOrders = expressAsyncHandler(async (req, res) => {
-  res.send("Gel All Orders");
+  const orders = await Order.find({}).populate("user", "id username");
+  res.status(200).json(orders);
 });
 
 export {
