@@ -71,8 +71,8 @@ const OrderScreen = () => {
   const onApprove = (data, actions) => {
     return actions.order.capture().then(async (details) => {
       try {
-        await payOrder({ orderId, details }).unwrap();
-        refetch();
+        await payOrder(orderId).unwrap();
+        await refetch();
         toast.success("Payment successful!");
       } catch (err) {
         toast.error(err?.data?.message);
@@ -108,8 +108,7 @@ const OrderScreen = () => {
 
   const deliverOrderHandler = async () => {
     try {
-      await deliverOrder({ orderId });
-      refetch();
+      await deliverOrder(orderId).unwrap();
       toast.success("Livraison effectuée!");
     } catch (error) {
       console.error("Error delivering order:", error);
@@ -252,7 +251,9 @@ const OrderScreen = () => {
                   {paymentLoading && <Loader />}
                   {isPending && <Loader />}
                   {paymentError && (
-                    <Message variant="danger">{paymentError}</Message>
+                    <Message variant="danger">
+                      {paymentError?.data?.message}
+                    </Message>
                   )}
                   <Row>
                     <Col className="text-center">

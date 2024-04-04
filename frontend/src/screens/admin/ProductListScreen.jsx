@@ -1,18 +1,36 @@
 import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Row, Col } from "react-bootstrap";
+import { toast } from "react-toastify";
 import { FaTimes, FaTrash, FaEdit } from "react-icons/fa";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
-import { useGetProductsQuery } from "../../slices/productsApiSlice.js";
+import {
+  useGetProductsQuery,
+  useCreateProductMutation,
+} from "../../slices/productsApiSlice.js";
 
 const ProductListScreen = () => {
-  const { data: products, isLoading, error } = useGetProductsQuery();
+  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+
+  const [
+    createProduct,
+    { isLoading: productCreationLoading },
+  ] = useCreateProductMutation();
+
+  const createProductHandler = async () => {
+    try {
+      await createProduct();
+      await refetch();
+      toast.success("Produit créé avec succès");
+    } catch (err) {
+      toast.error(err?.data?.message);
+    }
+  };
 
   const deleteProduct = (productId) => {
     console.log("delete : ", productId);
   };
-
   return (
     <div>
       <Row className="align-items-center">
@@ -20,7 +38,7 @@ const ProductListScreen = () => {
           <h1>Products</h1>
         </Col>
         <Col className="text-end">
-          <Button className="btn-sm m-3 p-2">
+          <Button className="btn-sm m-3 p-2" onClick={createProductHandler}>
             <FaEdit /> Créer un produit
           </Button>
         </Col>
@@ -69,6 +87,7 @@ const ProductListScreen = () => {
                 </td>
               </tr>
             ))}
+            {productCreationLoading && <Loader />}
           </tbody>
         </Table>
       </>
