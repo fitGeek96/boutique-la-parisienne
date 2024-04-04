@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Button,
@@ -18,15 +18,17 @@ import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
   useGetPayPalClientIdQuery,
+  useDeliverOrderMutation,
 } from "../slices/ordersApiSlice";
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
-  const { data: order, isLoading, error } = useGetOrderDetailsQuery(orderId);
+  const { data: order, refetch, isLoading, error } = useGetOrderDetailsQuery(
+    orderId,
+  );
 
   const {
     data: paypal,
-    refetch,
     isLoading: loadingPayPal,
     error: errorPayPal,
   } = useGetPayPalClientIdQuery();
@@ -35,6 +37,10 @@ const OrderScreen = () => {
     payOrder,
     { isLoading: paymentLoading, error: paymentError },
   ] = usePayOrderMutation();
+  const [
+    deliverOrder,
+    { isLoading: deliveryLoading, error: deliveryError },
+  ] = useDeliverOrderMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -78,21 +84,39 @@ const OrderScreen = () => {
     toast.error("PayPal payment error.");
   };
 
-  const createOrder = (data, actions) => {
-    return actions.order
-      .create({
-        purchase_units: [
-          {
-            amount: {
-              currency_code: "USD",
-              value: order.totalPrice,
+  // Inside your component
+
+  const createOrder = useCallback(
+    (data, actions) => {
+      return actions.order
+        .create({
+          purchase_units: [
+            {
+              amount: {
+                currency_code: "USD",
+                value: order?.totalPrice,
+              },
             },
-          },
-        ],
-      })
-      .then((orderId) => {
-        return orderId;
-      });
+          ],
+        })
+        .then((orderId) => {
+          return orderId;
+        });
+    },
+    [order], // Dependency on order
+  );
+
+  const deliverOrderHandler = async () => {
+    try {
+      await deliverOrder({ orderId });
+      refetch();
+      toast.success("Livraison effectuée!");
+    } catch (error) {
+      console.error("Error delivering order:", error);
+      toast.error(
+        "Une erreur s'est produite lors de la livraison de la commande.",
+      );
+    }
   };
 
   return (
@@ -100,7 +124,7 @@ const OrderScreen = () => {
       {isLoading && <Loader />}
       {error && <Message variant="danger">{error.data?.message}</Message>}
       <h3 className="text-warning">
-        ID Commande : {order?._id.substring(0, 10)}
+        ID Commande : {order?._id?.substring(0, 10)}
       </h3>
       <Row>
         <Col md={9}>
@@ -215,16 +239,21 @@ const OrderScreen = () => {
               </h5>
             </Card.Header>
             <Card.Body>
-              <Row className="mt-1">
-                <Col>Prix Total:</Col>
-                <Col className="text-center text-success">
-                  <strong>DA {order?.totalPrice}</strong>
+              <Row className="mb-2 w-100 text-left">
+                <Col as="h5">
+                  Prix Total:{" "}
+                  <strong className="text-danger">
+                    DA {order?.totalPrice}
+                  </strong>
                 </Col>
               </Row>
               {!order?.isPaid && (
                 <ListGroup.Item>
                   {paymentLoading && <Loader />}
                   {isPending && <Loader />}
+                  {paymentError && (
+                    <Message variant="danger">{paymentError}</Message>
+                  )}
                   <Row>
                     <Col className="text-center">
                       <PayPalButtons
@@ -232,6 +261,27 @@ const OrderScreen = () => {
                         onApprove={onApprove}
                         onError={onPayPalError}
                       />
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              )}
+
+              {userInfo && userInfo.isAdmin && !order?.isDelivered && (
+                <ListGroup.Item>
+                  {deliveryLoading && <Loader />}
+                  {deliveryError && (
+                    <Message variant="danger">
+                      {deliveryError?.data?.message}
+                    </Message>
+                  )}
+                  <Row>
+                    <Col className="text-center">
+                      <Button
+                        variant="warning btn-outline-info text-white fw-bold"
+                        onClick={deliverOrderHandler}
+                      >
+                        Marquer comme livré
+                      </Button>
                     </Col>
                   </Row>
                 </ListGroup.Item>

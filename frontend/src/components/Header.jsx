@@ -42,7 +42,11 @@ const Header = () => {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="ms-auto ps-3">
               <LinkContainer to={"/"}>
-                <Nav.Link>Shop</Nav.Link>
+                {userInfo && !userInfo.isAdmin ? (
+                  <Nav.Link>Shop</Nav.Link>
+                ) : (
+                  <Nav.Link></Nav.Link>
+                )}
               </LinkContainer>
               <LinkContainer to={"/contact"}>
                 <Nav.Link>Contact</Nav.Link>
@@ -68,7 +72,7 @@ const Header = () => {
                   </LinkContainer>
                   {userInfo && userInfo.isAdmin && (
                     <>
-                      <LinkContainer to="/admin/articlelist">
+                      <LinkContainer to="/admin/productlist">
                         <NavDropdown.Item>Articles</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/orderlist">
