@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Form, Button, InputGroup, Card, Row, Col } from "react-bootstrap";
+import { Form, Button, InputGroup } from "react-bootstrap";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import FormContainer from "../../components/FormContainer";
@@ -8,17 +8,18 @@ import { toast } from "react-toastify";
 import {
   useUpdateProductMutation,
   useGetProductDetailsQuery,
+  useUploadProductImageMutation,
 } from "../../slices/productsApiSlice";
 
 const ProductEditScreen = () => {
   const { id: productId } = useParams();
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState(0);
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
-  const [countInStock, setCountInStock] = useState("");
+  const [countInStock, setCountInStock] = useState(0);
 
   const {
     data: product,
@@ -28,6 +29,11 @@ const ProductEditScreen = () => {
   } = useGetProductDetailsQuery(productId);
 
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
+
+  const [
+    uploadProductImage,
+    { isLoading: isUploadingImage },
+  ] = useUploadProductImageMutation();
 
   const navigate = useNavigate();
 
@@ -45,25 +51,39 @@ const ProductEditScreen = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const updateProducat = {
-      _id: productId,
-      name,
-      price,
-      description,
-      image,
-      brand,
-      category,
-      countInStock,
-    };
-
-    const result = await updateProduct(updateProducat);
-
-    if (result.error) {
-      toast.error("Erreur lors de la mise à jour du produit");
-    } else {
-      toast.success("Produit mis à jour avec succès");
+    try {
+      await updateProduct({
+        _id: productId,
+        name,
+        price,
+        image,
+        brand,
+        category,
+        description,
+        countInStock,
+      }).unwrap(); // NOTE: here we need to unwrap the Promise to catch any rejection in our catch block
+      toast.success("Article mis à jour avec succès");
       refetch();
       navigate("/admin/productlist");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  };
+
+  const uploadFileHandler = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    const file = e.target.files[0];
+
+    formData.append("image", file);
+
+    try {
+      const res = await uploadProductImage(formData).unwrap();
+      toast.success("Image uploadé avec succès");
+      setImage(res.image);
+    } catch (error) {
+      toast.error("Erreur lors de l'upload de l'image");
     }
   };
 
@@ -117,18 +137,23 @@ const ProductEditScreen = () => {
               className="rounded"
             />
           </Form.Group>
-          {/* <Form.Group controlId="formBasicImage" className="mb-3">
+          <Form.Group controlId="formBasicImage" className="mb-3">
             <Form.Label as="h4" className="text-primary">
-              Image URL
+              Image
             </Form.Label>
-            <Form.Control
+            {/* <Form.Control
               value={image}
               onChange={(e) => setImage(e.target.value)}
               type="text"
               placeholder="Enter image URL"
               className="rounded-pill"
-            />
-          </Form.Group> */}
+            ></Form.Control> */}
+            <Form.Control
+              type="file"
+              label="Choisir un fichier"
+              onChange={uploadFileHandler}
+            ></Form.Control>
+          </Form.Group>
           <Form.Group controlId="formBasicBrand" className="mb-3">
             <Form.Label as="h4" className="text-primary">
               Brand

@@ -64,13 +64,13 @@ const updateProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    product.name = name || product.name;
-    product.price = price || product.price;
-    product.description = description || product.description;
-    product.category = category || product.category;
-    product.brand = brand || product.brand;
-    product.image = image || product.image;
-    product.countInStock = countInStock || product.countInStock;
+    product.name = name;
+    product.price = price;
+    product.description = description;
+    product.category = category;
+    product.brand = brand;
+    product.image = image;
+    product.countInStock = countInStock;
 
     const updatedProduct = await product.save();
     res.send(updatedProduct);
