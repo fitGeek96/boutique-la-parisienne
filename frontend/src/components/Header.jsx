@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge, Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { CgLogOut } from "react-icons/cg";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../slices/usersApiSlice";
@@ -78,11 +79,15 @@ const Header = () => {
                       <LinkContainer to="/admin/orderlist">
                         <NavDropdown.Item>Commandes</NavDropdown.Item>
                       </LinkContainer>
+                      <LinkContainer to="/admin/userlist">
+                        <NavDropdown.Item>Les Clientes</NavDropdown.Item>
+                      </LinkContainer>
                     </>
                   )}
-                  <LinkContainer to={"/logout"}>
+
+                  <LinkContainer to={"/logout"} className="mt-3">
                     <NavDropdown.Item onClick={logoutHandler}>
-                      Se déconnecter
+                      <CgLogOut /> Se déconnecter
                     </NavDropdown.Item>
                   </LinkContainer>
                 </NavDropdown>
