@@ -1,6 +1,6 @@
 import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { Table, Button } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
