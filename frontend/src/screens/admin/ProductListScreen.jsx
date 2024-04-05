@@ -8,6 +8,7 @@ import Message from "../../components/Message";
 import {
   useGetProductsQuery,
   useCreateProductMutation,
+  useDeleteProductMutation,
 } from "../../slices/productsApiSlice.js";
 
 const ProductListScreen = () => {
@@ -17,6 +18,11 @@ const ProductListScreen = () => {
     createProduct,
     { isLoading: productCreationLoading },
   ] = useCreateProductMutation();
+
+  const [
+    deleteProduct,
+    { isLoading: productDeletionLoading },
+  ] = useDeleteProductMutation();
 
   const createProductHandler = async () => {
     try {
@@ -28,8 +34,13 @@ const ProductListScreen = () => {
     }
   };
 
-  const deleteProduct = (productId) => {
-    console.log("delete : ", productId);
+  const deleteProductHandler = async (productId) => {
+    try {
+      await deleteProduct(productId);
+      toast.success("Produit supprimé avec succès");
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error);
+    }
   };
   return (
     <div>
@@ -80,7 +91,7 @@ const ProductListScreen = () => {
                   <Button
                     variant="danger"
                     className="btn-sm mx-3 p-2 text-white"
-                    onClick={() => deleteProduct(product._id)}
+                    onClick={() => deleteProductHandler(product._id)}
                   >
                     <FaTrash />
                   </Button>
@@ -88,6 +99,7 @@ const ProductListScreen = () => {
               </tr>
             ))}
             {productCreationLoading && <Loader />}
+            {productDeletionLoading && <Loader />}
           </tbody>
         </Table>
       </>
