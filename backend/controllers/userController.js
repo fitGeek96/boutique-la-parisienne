@@ -127,7 +127,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @access  Private / Admin
 
 const getUsers = asyncHandler(async (req, res) => {
-  res.send("Get Users");
+  const users = await User.find({});
+  res.status(200).json(users);
 });
 
 // @desc    Get User By Id
@@ -135,7 +136,14 @@ const getUsers = asyncHandler(async (req, res) => {
 // @access  Private / Admin
 
 const getUserById = asyncHandler(async (req, res) => {
-  res.send("Get User By Id");
+  const user = await User.findById(req.params.id).select("-password");
+
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(404);
+    throw new Error("User not found!");
+  }
 });
 
 // @desc    Delete users
@@ -143,7 +151,23 @@ const getUserById = asyncHandler(async (req, res) => {
 // @access  Private/admin
 
 const deleteUser = asyncHandler(async (req, res) => {
-  res.send("Delete User");
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (user && user.isAdmin) {
+      res.status(400);
+      throw new Error("Vous ne pouvez pas supprimer un administrateur!");
+    }
+
+    await User.deleteOne({ _id: user._id });
+    res.status(200).json({
+      success: true,
+      message: "Utilisateur supprimé avec succès",
+    });
+  } catch (error) {
+    res.status(404);
+    throw new Error("Utilisateur introuvable!");
+  }
 });
 
 // @desc    Update user
@@ -151,7 +175,25 @@ const deleteUser = asyncHandler(async (req, res) => {
 // @access  Private/admin
 
 const updateUser = asyncHandler(async (req, res) => {
-  res.send("Update User");
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) {
+      user.username = req.body.username || user.username;
+      user.email = req.body.email || user.email;
+      user.isAdmin = Boolean(req.body.isAdmin);
+
+      const updatedUser = await user.save();
+      res.status(200).json({
+        _id: updatedUser._id,
+        username: updatedUser.username,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
+      });
+    }
+  } catch (error) {
+    res.status(404);
+    throw new Error("Utilisateur introuvable!");
+  }
 });
 
 export {
