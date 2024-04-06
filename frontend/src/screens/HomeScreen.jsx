@@ -5,11 +5,14 @@ import Product from "../components/Product";
 import { useGetProductsQuery } from "../slices/productsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import Paginate from "../components/Paginate";
+import { useSelector } from "react-redux";
 // import axios from "axios";
 
 const HomeScreen = () => {
   const { pageNumber } = useParams();
   const { data, isLoading, isError } = useGetProductsQuery({ pageNumber });
+  const { userInfo } = useSelector((state) => state.auth);
 
   return (
     <>
@@ -28,6 +31,12 @@ const HomeScreen = () => {
           </Col>
         ))}
       </Row>
+
+      <Paginate
+        pages={data?.pages}
+        page={data?.page}
+        isAdmin={userInfo?.isAdmin}
+      />
     </>
   );
 };

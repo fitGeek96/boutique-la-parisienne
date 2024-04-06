@@ -10,9 +10,16 @@ import {
   useCreateProductMutation,
   useDeleteProductMutation,
 } from "../../slices/productsApiSlice.js";
+import Paginate from "../../components/Paginate.jsx";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const ProductListScreen = () => {
-  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+  const { pageNumber } = useParams();
+  const { data, isLoading, error, refetch } = useGetProductsQuery({
+    pageNumber,
+  });
+  const { userInfo } = useSelector((state) => state.auth);
 
   const [
     createProduct,
@@ -46,11 +53,11 @@ const ProductListScreen = () => {
     <div>
       <Row className="align-items-center">
         <Col>
-          <h1>Products</h1>
+          <h1>Les Articles Disponibles</h1>
         </Col>
         <Col className="text-end">
           <Button className="btn-sm m-3 p-2" onClick={createProductHandler}>
-            <FaEdit /> Créer un produit
+            <FaEdit /> Ajouter un article
           </Button>
         </Col>
       </Row>
@@ -68,7 +75,7 @@ const ProductListScreen = () => {
             </tr>
           </thead>
           <tbody>
-            {products?.map((product) => (
+            {data?.products?.map((product) => (
               <tr key={product._id}>
                 <td style={{ width: "100px", height: "auto" }}>
                   <LinkContainer to={`/products/${product._id}`}>
@@ -102,6 +109,11 @@ const ProductListScreen = () => {
             {productDeletionLoading && <Loader />}
           </tbody>
         </Table>
+        <Paginate
+          pages={data?.pages}
+          page={data?.page}
+          isAdmin={userInfo?.isAdmin}
+        />
       </>
     </div>
   );
