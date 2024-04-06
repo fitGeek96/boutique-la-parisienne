@@ -119,24 +119,28 @@ const createdProductReview = asyncHandler(async (req, res) => {
       });
     } else {
       const newReview = {
-        user: req.user.id,
-        name: req.user.name,
+        user: req.user?._id,
+        name: req.user?.username,
+        product,
         rating: Number(rating),
         comment,
       };
 
-      product.reviews.unshift(newReview);
+      product.reviews.push(newReview);
       product.numReviews = product.reviews.length;
-      product.rating = product.reviews.reduce((acc, review) => acc + review.rating, 0) / product.reviews.length;
+      product.rating =
+        product.reviews.reduce((acc, review) => acc + review.rating, 0) /
+        product.reviews.length;
 
       await product.save();
       res.status(201).json({
         success: true,
         message: "Votre évaluation a bien été prise en compte",
       });
+    }
   } else {
     res.status(404);
-    throw new Error("Product Not Found");
+    throw new Error("Produit introuvable");
   }
 });
 
@@ -146,5 +150,5 @@ export {
   createProduct,
   updateProduct,
   deleteProduct,
-  createdProductReview
+  createdProductReview,
 };
