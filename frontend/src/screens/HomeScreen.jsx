@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
 import { useGetProductsQuery } from "../slices/productsApiSlice";
@@ -7,20 +8,9 @@ import Message from "../components/Message";
 // import axios from "axios";
 
 const HomeScreen = () => {
-  const { data: products, isLoading, isError } = useGetProductsQuery();
-  // const [products, setProducts] = useState([]);
-  // const [loading, setLoading] = useState(true);
+  const { pageNumber } = useParams();
+  const { data, isLoading, isError } = useGetProductsQuery({ pageNumber });
 
-  // useEffect(() => {
-  //   const fetchProducts = async () => {
-  //     const { data } = await axios.get("/api/products");
-  //     setLoading(true);
-  //     setProducts(data);
-  //     setLoading(false);
-  //   };
-
-  //   fetchProducts();
-  // }, []);
   return (
     <>
       <h1>Latest Products</h1>
@@ -32,7 +22,7 @@ const HomeScreen = () => {
           </Message>
         )}
 
-        {products?.map((product) => (
+        {data?.products?.map((product) => (
           <Col key={product._id} xs={12} sm={6} md={4} lg={3}>
             <Product product={product} />
           </Col>
