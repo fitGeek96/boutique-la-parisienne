@@ -109,6 +109,7 @@ const OrderScreen = () => {
   const deliverOrderHandler = async () => {
     try {
       await deliverOrder(orderId).unwrap();
+      refetch();
       toast.success("Livraison effectuée!");
     } catch (error) {
       console.error("Error delivering order:", error);
