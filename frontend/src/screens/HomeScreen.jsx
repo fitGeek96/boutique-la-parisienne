@@ -10,8 +10,11 @@ import { useSelector } from "react-redux";
 // import axios from "axios";
 
 const HomeScreen = () => {
-  const { pageNumber } = useParams();
-  const { data, isLoading, isError } = useGetProductsQuery({ pageNumber });
+  const { keyword, pageNumber } = useParams();
+  const { data, isLoading, isError } = useGetProductsQuery({
+    keyword,
+    pageNumber,
+  });
   const { userInfo } = useSelector((state) => state.auth);
 
   return (
@@ -36,6 +39,7 @@ const HomeScreen = () => {
         pages={data?.pages}
         page={data?.page}
         isAdmin={userInfo?.isAdmin}
+        keyword={keyword ? keyword : ""}
       />
     </>
   );
