@@ -7,6 +7,7 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import Paginate from "../components/Paginate";
 import { useSelector } from "react-redux";
+import ProductCarousel from "../components/ProductCarousel";
 // import axios from "axios";
 
 const HomeScreen = () => {
@@ -20,7 +21,9 @@ const HomeScreen = () => {
   return (
     <>
       <h1>Latest Products</h1>
-      {keyword && (
+      {!keyword ? (
+        <ProductCarousel />
+      ) : (
         <Link to={`/`} className="btn btn-light mb-4">
           Retour
         </Link>
