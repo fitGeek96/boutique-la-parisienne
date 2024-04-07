@@ -19,6 +19,7 @@ import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { addToCart } from "../slices/cartSlice";
 import { toast } from "react-toastify";
+import Meta from "../components/Meta";
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
@@ -74,6 +75,7 @@ const ProductScreen = () => {
 
   return (
     <>
+      <Meta title={product?.name} />
       <Link to="/" className="btn btn-light my-3 ms-3">
         Go Back
       </Link>

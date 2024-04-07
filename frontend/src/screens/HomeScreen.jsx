@@ -2,6 +2,7 @@ import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
+import Meta from "../components/Meta";
 import { useGetProductsQuery } from "../slices/productsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -20,6 +21,7 @@ const HomeScreen = () => {
 
   return (
     <>
+      <Meta title={"La Parisienne"} />
       <h1>Latest Products</h1>
       {!keyword ? (
         <ProductCarousel />
