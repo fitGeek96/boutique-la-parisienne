@@ -9,6 +9,7 @@ import { useLogoutMutation } from "../slices/usersApiSlice";
 import { logout } from "../slices/authSlice";
 import logo from "../assets/logo.png";
 import { toast } from "react-toastify";
+import SearchBox from "./SearchBox";
 
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
@@ -42,6 +43,8 @@ const Header = () => {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="ms-auto ps-3">
+              <SearchBox />
+
               <LinkContainer to={"/"}>
                 {userInfo && !userInfo.isAdmin ? (
                   <Nav.Link>Shop</Nav.Link>
@@ -92,12 +95,14 @@ const Header = () => {
                   </LinkContainer>
                 </NavDropdown>
               ) : (
-                <LinkContainer to={"/login"}>
-                  <Nav.Link>
-                    <FaUser />
-                    <span className="ms-2">Se connecter</span>
-                  </Nav.Link>
-                </LinkContainer>
+                <>
+                  <LinkContainer to={"/login"}>
+                    <Nav.Link>
+                      <FaUser />
+                      <span className="ms-2">Se connecter</span>
+                    </Nav.Link>
+                  </LinkContainer>
+                </>
               )}
             </Nav>
           </Navbar.Collapse>
