@@ -15,6 +15,7 @@
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "framer-motion": "^11.0.25",
+    "la-parisienne": "file:..",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
