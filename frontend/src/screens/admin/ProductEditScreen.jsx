@@ -96,7 +96,7 @@ const ProductEditScreen = () => {
         <h1>Éditer le produit</h1>
         {isUpdating && <Loader />}
         {error && <Message variant="danger">{error?.data?.message}</Message>}
-        <Form onSubmit={submitHandler}>
+        <Form onSubmit={submitHandler} className="w-75 glass-container">
           <Form.Group controlId="formBasicName" className="mb-3">
             <Form.Label as="h4" className="text-primary">
               Nom du produit

@@ -53,8 +53,11 @@ const RegisterScreen = () => {
 
   return (
     <FormContainer>
-      <h1>S'inscrire</h1>
-      <Form onSubmit={submitHandler}>
+      <Form
+        onSubmit={submitHandler}
+        className="glass-container justify-content-center mx-auto"
+      >
+        <h1>S'inscrire</h1>
         <Form.Group controlId="email">
           <Form.Label>Nom d'utilisateur</Form.Label>
           <Form.Control
@@ -96,18 +99,18 @@ const RegisterScreen = () => {
           S'inscrire
         </Button>
         {isLoading && <Loader />}
+        <Row className="mt-3">
+          <Col>
+            <strong>
+              {" "}
+              Vous avez déjà un compte?{" "}
+              <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>
+                Se Connecter
+              </Link>
+            </strong>
+          </Col>
+        </Row>
       </Form>
-      <Row className="mt-3">
-        <Col>
-          <strong>
-            {" "}
-            Vous avez déjà un compte?{" "}
-            <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>
-              Se Connecter
-            </Link>
-          </strong>
-        </Col>
-      </Row>
     </FormContainer>
   );
 };

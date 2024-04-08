@@ -58,7 +58,7 @@ const UserEditScreen = () => {
         {errorUserDetails && (
           <Message variant="danger">{errorUserDetails?.data?.message}</Message>
         )}
-        <Form onSubmit={submitHandler}>
+        <Form onSubmit={submitHandler} className="w-75 glass-container">
           <Form.Group controlId="username">
             <Form.Label>Nom d'utilisateur</Form.Label>
             <Form.Control

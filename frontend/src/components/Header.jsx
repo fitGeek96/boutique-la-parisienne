@@ -2,6 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge, Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { TiGroup } from "react-icons/ti";
+import { TbTruckDelivery } from "react-icons/tb";
+import { HiShoppingBag } from "react-icons/hi2";
 import { CgLogOut } from "react-icons/cg";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
@@ -32,77 +35,86 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
+      <Navbar
+        expand="lg"
+        collapseOnSelect
+        className={userInfo?.isAdmin ? "bg-dark" : "navbar-bg-color"}
+      >
         <Container>
           <LinkContainer to="/">
             <Navbar.Brand>
               <img src={logo} alt="Logo" width={70} height={70} />
-              {/* <span className="ml-2">La Parisienne</span> */}
             </Navbar.Brand>
           </LinkContainer>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="ms-auto ps-3">
-              <SearchBox />
+          {/* <SearchBox /> */}
 
-              <LinkContainer to={"/"}>
-                {userInfo && !userInfo.isAdmin ? (
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav" className="mt-2">
+            <Nav className="ms-auto text-white">
+              {userInfo && !userInfo.isAdmin && (
+                <LinkContainer to="/" className="text-white">
                   <Nav.Link>Shop</Nav.Link>
-                ) : (
-                  <Nav.Link></Nav.Link>
-                )}
-              </LinkContainer>
-              <LinkContainer to={"/contact"}>
-                <Nav.Link>Contact</Nav.Link>
-              </LinkContainer>
-              <LinkContainer to={"/cart"}>
-                <Nav.Link>
+                </LinkContainer>
+              )}
+
+              <LinkContainer to="/cart">
+                <Nav.Link className="position-relative text-white">
                   <FaShoppingCart />
-                  {cartItems?.length ? (
-                    <Badge pill bg="danger">
-                      {" "}
-                      {cartItems?.length}{" "}
+                  {cartItems.length > 0 && (
+                    <Badge
+                      pill
+                      bg="danger"
+                      className="position-absolute top-0 start-100 translate-middle"
+                    >
+                      {cartItems.length}
                     </Badge>
-                  ) : (
-                    ""
                   )}
                   <span className="ms-2">Panier</span>
                 </Nav.Link>
               </LinkContainer>
               {userInfo ? (
-                <NavDropdown title={userInfo?.username} id="username">
-                  <LinkContainer to={"/profile"}>
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                <NavDropdown title={userInfo.username} id="username">
+                  <LinkContainer to="/profile">
+                    <NavDropdown.Item>
+                      {" "}
+                      <FaUser className="me-2 align-middle" /> Profile
+                    </NavDropdown.Item>
                   </LinkContainer>
-                  {userInfo && userInfo.isAdmin && (
+                  {userInfo.isAdmin && (
                     <>
                       <LinkContainer to="/admin/productlist">
-                        <NavDropdown.Item>Articles</NavDropdown.Item>
+                        <NavDropdown.Item>
+                          <HiShoppingBag className="me-2 align-middle" />
+                          Articles
+                        </NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/orderlist">
-                        <NavDropdown.Item>Commandes</NavDropdown.Item>
+                        <NavDropdown.Item>
+                          <TbTruckDelivery className="me-2 align-middle" />
+                          Commandes
+                        </NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/userlist">
-                        <NavDropdown.Item>Les Clientes</NavDropdown.Item>
+                        <NavDropdown.Item>
+                          <TiGroup className="me-2 align-middle" />
+                          Les Clientes
+                        </NavDropdown.Item>
                       </LinkContainer>
                     </>
                   )}
-
-                  <LinkContainer to={"/logout"} className="mt-3">
+                  <LinkContainer to="/logout">
                     <NavDropdown.Item onClick={logoutHandler}>
                       <CgLogOut /> Se déconnecter
                     </NavDropdown.Item>
                   </LinkContainer>
                 </NavDropdown>
               ) : (
-                <>
-                  <LinkContainer to={"/login"}>
-                    <Nav.Link>
-                      <FaUser />
-                      <span className="ms-2">Se connecter</span>
-                    </Nav.Link>
-                  </LinkContainer>
-                </>
+                <LinkContainer to="/login">
+                  <Nav.Link>
+                    <FaUser />
+                    <span className="ms-2">Se connecter</span>
+                  </Nav.Link>
+                </LinkContainer>
               )}
             </Nav>
           </Navbar.Collapse>

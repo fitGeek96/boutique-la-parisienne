@@ -1,3 +1,7 @@
+* {
+  font-family: "Playfair Display", serif;
+}
+
 main {
   min-height: 80vh;
 }
@@ -5,6 +9,11 @@ main {
 a {
   text-decoration: none;
   font-weight: bold;
+}
+
+h1,
+h2 {
+  color: rgb(236, 183, 234);
 }
 
 .rating span {
@@ -55,4 +64,22 @@ table th {
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
+}
+
+.navbar-bg-color {
+  background: rgba(218, 112, 214, 0.5); /* Light Pink (variant of purple) */
+  backdrop-filter: blur(10px); /* Blur effect */
+  border: 1px solid rgba(218, 112, 214, 0.3); /* Border for better visibility */
+  padding: 20px; /* Adjust padding as needed */
+  box-shadow: 0 4px 6px rgba(218, 112, 214, 0.1),
+    0 1px 3px rgba(218, 112, 214, 0.08); /* Shadow for depth */
+}
+
+.glass-container {
+  background: rgba(255, 255, 255, 0.5); /* Glass effect */
+  border-radius: 20px; /* Adjust the radius as needed */
+  backdrop-filter: blur(10px); /* Blur effect */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Border for better visibility */
+  padding: 20px; /* Adjust padding as needed */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Shadow for depth */
 }

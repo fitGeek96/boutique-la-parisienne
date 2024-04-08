@@ -61,7 +61,7 @@ const ProfileScreen = () => {
 
   return (
     <Row>
-      <Col md={3}>
+      <Col md={3} className="mt-3">
         <h2>Profil d'utilisateur</h2>
         <Form onSubmit={submitHandler}>
           <Form.Group controlId="username" className="my-2">
@@ -100,7 +100,7 @@ const ProfileScreen = () => {
           <Button
             variant="danger"
             type="submit"
-            className="mt-3 text-white"
+            className="mt-3 text-white w-100"
             disabled={isLoading === true}
           >
             Modifier
@@ -108,8 +108,8 @@ const ProfileScreen = () => {
           {isLoading && <Loader />}
         </Form>
       </Col>
-      <Col md={9}>
-        <h3>Mes Commandes</h3>
+      <Col md={9} className="mt-3">
+        <h2>Mes Commandes</h2>
         {isLoadingOrders && <Loader />}
         {myOrderError && (
           <Message variant="danger">{myOrderError?.data?.message}</Message>

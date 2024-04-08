@@ -22,9 +22,9 @@ const HomeScreen = () => {
   return (
     <>
       <Meta title={"La Parisienne"} />
-      <h1>Latest Products</h1>
+      <h1>Nouveaux Arrivages</h1>
       {!keyword ? (
-        <ProductCarousel />
+        ""
       ) : (
         <Link to={`/`} className="btn btn-light mb-4">
           Retour
@@ -39,7 +39,7 @@ const HomeScreen = () => {
         )}
 
         {data?.products?.map((product) => (
-          <Col key={product._id} xs={12} sm={6} md={4} lg={3}>
+          <Col key={product._id} xs={6} sm={6} md={4} lg={3}>
             <Product product={product} />
           </Col>
         ))}

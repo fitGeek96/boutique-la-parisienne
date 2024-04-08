@@ -42,8 +42,9 @@ const LoginScreen = () => {
 
   return (
     <FormContainer>
-      <h1>Se connecter</h1>
-      <Form onSubmit={submitHandler}>
+      <Form onSubmit={submitHandler} className="glass-container mx-auto">
+        <h4>Se connecter</h4>
+
         <Form.Group controlId="email">
           <Form.Label>Adresse e-mail</Form.Label>
           <Form.Control
@@ -51,9 +52,6 @@ const LoginScreen = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <Form.Text className="text-muted">
-            Nous ne partagerons jamais votre e-mail avec quelqu'un d'autre.
-          </Form.Text>
         </Form.Group>
         <Form.Group controlId="password">
           <Form.Label>Mot de passe</Form.Label>
@@ -72,20 +70,20 @@ const LoginScreen = () => {
           Se Connecter
         </Button>
         {isLoading && <Loader />}
+        <Row className="mt-3">
+          <Col>
+            <strong>
+              {" "}
+              Nouvelle Cliente?{" "}
+              <Link
+                to={redirect ? `/register?redirect=${redirect}` : "/register"}
+              >
+                S'enregistrer
+              </Link>
+            </strong>
+          </Col>
+        </Row>
       </Form>
-      <Row className="mt-3">
-        <Col>
-          <strong>
-            {" "}
-            Nouvelle Cliente?{" "}
-            <Link
-              to={redirect ? `/register?redirect=${redirect}` : "/register"}
-            >
-              S'enregistrer
-            </Link>
-          </strong>
-        </Col>
-      </Row>
     </FormContainer>
   );
 };
