@@ -34,6 +34,10 @@ const CartScreen = () => {
     navigate("/login?redirect=/shipping");
   };
 
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   return (
     <Container>
       <Row>
@@ -46,65 +50,51 @@ const CartScreen = () => {
           ) : (
             <ListGroup variant="flush">
               {cartItems?.map((item) => (
-                <ListGroup.Item key={item._idid}>
-                  <Row>
-                    <Col md={2} xs={5} className="p-0">
+                <ListGroup.Item key={item._id} className="border-0">
+                  <Row className="align-items-center">
+                    <Col md={3} xs={4} className="text-center">
                       <Image
                         src={item.image}
                         alt={item.name}
-                        className="align-self-center"
-                        style={{ width: "80%" }}
                         fluid
                         rounded
+                        className="w-100"
                       />
                     </Col>
-                    <Col
-                      md={3}
-                      xs={7}
-                      className="text-center align-self-center"
-                    >
-                      <Link to={`/products/${item._id}`}>{item.name}</Link>
+                    <Col md={3} xs={8} className="text-md-start mt-3 mt-md-0">
+                      <Link
+                        to={`/products/${item._id}`}
+                        className="text-decoration-none"
+                      >
+                        <h6 className="mb-0">{item.name}</h6>
+                      </Link>
                     </Col>
-                    <Col
-                      md={2}
-                      xs={4}
-                      className="text-center mx-auto align-self-center"
-                    >
-                      {" "}
-                      <strong> DA {item.price} </strong>
+                    <Col md={2} className="text-center">
+                      <p className="mb-0">DA {formatPrice(item.price)}</p>
                     </Col>
-                    <Col
-                      md={3}
-                      xs={4}
-                      className="text-center my-2 mx-auto align-self-center"
-                    >
+                    <Col md={2} xs={6} className="text-center mt-3 mt-md-0">
                       <Form.Control
                         as="select"
                         value={item.qty}
                         onChange={(e) =>
                           addToCartHandler(item, Number(e.target.value))
                         }
-                        className="text-center mx-auto w-50"
+                        className="text-center w-75 mx-auto"
                       >
-                        {Array.from({ length: item?.countInStock }, (v, i) => (
+                        {Array.from({ length: item.countInStock }, (v, i) => (
                           <option key={i} value={i + 1}>
                             {i + 1}
                           </option>
                         ))}
                       </Form.Control>
                     </Col>
-                    <Col
-                      md={2}
-                      xs={4}
-                      className="text-center align-self-center"
-                    >
+                    <Col md={2} xs={6} className="text-center mt-3 mt-md-0">
                       <Button
                         variant="outline-danger"
                         size="sm"
                         onClick={() => removeFromCartHandler(item._id)}
-                        className="py-2"
                       >
-                        <FaTrash size={20} />
+                        <FaTrash />
                       </Button>
                     </Col>
                   </Row>
@@ -122,7 +112,10 @@ const CartScreen = () => {
                   <Col className="text-center">
                     <strong>
                       {" "}
-                      DA {cart.totalPrice ? `${cart.totalPrice}` : "00.0"}{" "}
+                      DA{" "}
+                      {cart.totalPrice
+                        ? `${formatPrice(cart.totalPrice)}`
+                        : "00.0"}{" "}
                     </strong>
                   </Col>
                 </Row>

@@ -64,19 +64,22 @@ const Header = () => {
                     <Badge
                       pill
                       bg="danger"
-                      className="position-absolute top-0 start-100 translate-middle"
+                      className="position-absolute start-300 translate-middle"
                     >
                       {cartItems.length}
                     </Badge>
                   )}
-                  <span className="ms-2">Panier</span>
                 </Nav.Link>
               </LinkContainer>
+
               {userInfo ? (
-                <NavDropdown title={userInfo.username} id="username">
+                <NavDropdown
+                  title={userInfo.username}
+                  id="username"
+                  className="text-white"
+                >
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>
-                      {" "}
                       <FaUser className="me-2 align-middle" /> Profile
                     </NavDropdown.Item>
                   </LinkContainer>

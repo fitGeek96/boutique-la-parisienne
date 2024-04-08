@@ -68,11 +68,6 @@ table th {
 
 .navbar-bg-color {
   background: rgba(218, 112, 214, 0.5); /* Light Pink (variant of purple) */
-  backdrop-filter: blur(10px); /* Blur effect */
-  border: 1px solid rgba(218, 112, 214, 0.3); /* Border for better visibility */
-  padding: 20px; /* Adjust padding as needed */
-  box-shadow: 0 4px 6px rgba(218, 112, 214, 0.1),
-    0 1px 3px rgba(218, 112, 214, 0.08); /* Shadow for depth */
 }
 
 .glass-container {
