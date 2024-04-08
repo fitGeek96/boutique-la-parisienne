@@ -43,9 +43,9 @@ const LoginScreen = () => {
   return (
     <FormContainer>
       <Form onSubmit={submitHandler} className="glass-container mx-auto">
-        <h4>Se connecter</h4>
+        <h2>Se Connecter</h2>
 
-        <Form.Group controlId="email">
+        <Form.Group controlId="email" className="mb-2">
           <Form.Label>Adresse e-mail</Form.Label>
           <Form.Control
             type="email"

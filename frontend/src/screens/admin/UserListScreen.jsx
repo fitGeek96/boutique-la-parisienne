@@ -31,7 +31,7 @@ const UserListScreen = () => {
 
   return (
     <>
-      <h2>Liste de toutes les clientes</h2>
+      <h3>Liste de toutes les clientes</h3>
       {isLoading && <Loader />}
       {error && <Message variant="danger">{error?.data?.message}</Message>}
       <Table striped hover responsive className="table-sm">

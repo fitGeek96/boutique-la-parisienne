@@ -42,42 +42,49 @@ const Header = () => {
       >
         <Container>
           <LinkContainer to="/">
-            <Navbar.Brand>
+            <Navbar.Brand className="p-0 m-0">
               <img src={logo} alt="Logo" width={70} height={70} />
             </Navbar.Brand>
           </LinkContainer>
-          {/* <SearchBox /> */}
 
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav" className="mt-2">
+          <Navbar.Toggle
+            aria-controls="responsive-navbar-nav"
+            className="text-white"
+          />
+          <Navbar.Collapse
+            id="responsive-navbar-nav"
+            className="mt-2 ms-2 fw-bold"
+          >
             <Nav className="ms-auto text-white">
               {userInfo && !userInfo.isAdmin && (
-                <LinkContainer to="/" className="text-white">
-                  <Nav.Link>Shop</Nav.Link>
-                </LinkContainer>
+                <>
+                  <SearchBox />
+                  <LinkContainer to="/" className="text-white">
+                    <Nav.Link>Shop</Nav.Link>
+                  </LinkContainer>
+                </>
               )}
 
               <LinkContainer to="/cart">
                 <Nav.Link className="position-relative text-white">
-                  <FaShoppingCart />
+                  <FaShoppingCart size={20} />
                   {cartItems.length > 0 && (
-                    <Badge
-                      pill
-                      bg="danger"
-                      className="position-absolute start-300 translate-middle"
-                    >
-                      {cartItems.length}
-                    </Badge>
+                    <>
+                      <Badge
+                        pill
+                        bg="danger"
+                        className="position-absolute start-300 translate-middle"
+                      >
+                        {cartItems.length}
+                      </Badge>
+                    </>
                   )}
+                  <span className="ms-1 align-middle">Panier</span>
                 </Nav.Link>
               </LinkContainer>
 
               {userInfo ? (
-                <NavDropdown
-                  title={userInfo.username}
-                  id="username"
-                  className="text-white"
-                >
+                <NavDropdown title={userInfo.username}>
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>
                       <FaUser className="me-2 align-middle" /> Profile
@@ -107,7 +114,8 @@ const Header = () => {
                   )}
                   <LinkContainer to="/logout">
                     <NavDropdown.Item onClick={logoutHandler}>
-                      <CgLogOut /> Se déconnecter
+                      <CgLogOut />
+                      Se déconnecter
                     </NavDropdown.Item>
                   </LinkContainer>
                 </NavDropdown>
@@ -115,7 +123,7 @@ const Header = () => {
                 <LinkContainer to="/login">
                   <Nav.Link>
                     <FaUser />
-                    <span className="ms-2">Se connecter</span>
+                    <span className="ms-1 align-middle">Se connecter</span>
                   </Nav.Link>
                 </LinkContainer>
               )}

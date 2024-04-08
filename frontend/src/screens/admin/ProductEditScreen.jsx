@@ -93,10 +93,9 @@ const ProductEditScreen = () => {
         Retour
       </Link>
       <FormContainer>
-        <h1>Éditer le produit</h1>
         {isUpdating && <Loader />}
         {error && <Message variant="danger">{error?.data?.message}</Message>}
-        <Form onSubmit={submitHandler} className="w-75 glass-container">
+        <Form onSubmit={submitHandler} className="w-100 glass-container">
           <Form.Group controlId="formBasicName" className="mb-3">
             <Form.Label as="h4" className="text-primary">
               Nom du produit
@@ -191,9 +190,9 @@ const ProductEditScreen = () => {
             />
           </Form.Group>
           <Button
-            variant="danger"
+            variant="dark"
             type="submit"
-            className="mt-3 px-4 rounded-pill fw-bold"
+            className="mt-3 px-4 rounded-pill fw-bold w-100 text-white"
             style={{ fontSize: "1.2rem" }}
           >
             Mettre à jour le produit

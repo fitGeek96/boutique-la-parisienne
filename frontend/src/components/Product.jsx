@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import Rating from "./Rating";
 
 const Product = ({ product }) => {
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
   return (
     <Card className="mb-3">
       <Link to={`/products/${product._id}`}>
@@ -15,8 +18,10 @@ const Product = ({ product }) => {
             <strong>{product.name}</strong>
           </Link>
         </Card.Title>
-        <Card.Text as={"h4"}>DA {product.price}</Card.Text>
-        <Rating value={product.rating} text={product.numReviews} />
+        <Card.Text as={"h6"}>
+          DA {formatPrice(product.price)}
+          <Rating value={product.rating} text={product.numReviews} />
+        </Card.Text>
       </Card.Body>
     </Card>
   );

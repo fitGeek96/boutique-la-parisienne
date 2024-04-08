@@ -20,6 +20,7 @@ import Message from "../components/Message";
 import { addToCart } from "../slices/cartSlice";
 import { toast } from "react-toastify";
 import Meta from "../components/Meta";
+import { FaStar, FaComment, FaArrowLeft } from "react-icons/fa";
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
@@ -73,11 +74,15 @@ const ProductScreen = () => {
     }
   };
 
+  const formatPrice = (price) => {
+    return price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   return (
     <>
       <Meta title={product?.name} />
       <Link to="/" className="btn btn-light my-3 ms-3">
-        Go Back
+        <FaArrowLeft /> Retour
       </Link>
       {isLoading && <Loader />}
       {isError && (
@@ -97,10 +102,11 @@ const ProductScreen = () => {
           <ListGroup variant="flush">
             <ListGroup.Item as="h4">{product?.name}</ListGroup.Item>
             <ListGroup.Item>
-              <Rating
-                value={product?.rating}
-                text={`${product?.numReviews} reviews`}
-              />
+              <div className="rating">
+                <FaStar color="#ffc107" />
+                <span>{product?.rating}</span>
+                <span className="ms-1">({product?.numReviews} avis)</span>
+              </div>
             </ListGroup.Item>
             <ListGroup.Item>
               <strong>Description:</strong> {product?.description}
@@ -114,7 +120,7 @@ const ProductScreen = () => {
                 <Row>
                   <Col>Prix:</Col>
                   <Col className="text-center">
-                    <strong>DZD {product?.price}</strong>
+                    <strong>DA {formatPrice(product?.price)}</strong>
                   </Col>
                 </Row>
               </ListGroup.Item>
@@ -170,22 +176,27 @@ const ProductScreen = () => {
       </Row>
       <Row className="review">
         <Col md={6}>
-          <h2>Reviews</h2>
-          {product?.reviews?.length === 0 && <Message>No Reviews</Message>}
+          <h2>
+            <FaComment /> Commentaires
+          </h2>
+          {product?.reviews?.length === 0 && (
+            <Message>Aucun commentaire</Message>
+          )}
           <ListGroup variant="flush">
             {product?.reviews?.map((review) => (
               <ListGroup.Item key={review._id}>
                 <strong>{review.name}</strong>
-                <Rating value={review.rating} />
+                <div className="rating">
+                  <FaStar color="#ffc107" />
+                  <span>{review.rating}</span>
+                </div>
                 <p>{review.createdAt.substring(0, 10)}</p>
                 <p>{review.comment}</p>
               </ListGroup.Item>
             ))}
             <ListGroup.Item>
-              <h2>Write a Customer Review</h2>
-
+              <h2>Laisser un commentaire</h2>
               {loadingProductReview && <Loader />}
-
               {userInfo ? (
                 <Form onSubmit={submitHandler}>
                   <Form.Group className="my-2" controlId="rating">
@@ -197,34 +208,36 @@ const ProductScreen = () => {
                       onChange={(e) => setRating(e.target.value)}
                     >
                       <option value="">Select...</option>
-                      <option value="1">1 - Poor</option>
-                      <option value="2">2 - Fair</option>
-                      <option value="3">3 - Good</option>
-                      <option value="4">4 - Very Good</option>
+                      <option value="1">1 - Mauvais</option>
+                      <option value="2">2 - Équitable</option>
+                      <option value="3">3 - Beau</option>
+                      <option value="4">4 - Très beau</option>
                       <option value="5">5 - Excellent</option>
                     </Form.Control>
                   </Form.Group>
                   <Form.Group className="my-2" controlId="comment">
-                    <Form.Label>Comment</Form.Label>
+                    <Form.Label>Commentaires</Form.Label>
                     <Form.Control
                       as="textarea"
                       row="3"
                       required
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
-                    ></Form.Control>
+                    />
                   </Form.Group>
                   <Button
                     disabled={loadingProductReview}
                     type="submit"
                     variant="primary"
+                    className="w-100"
                   >
-                    Submit
+                    Envoyer
                   </Button>
                 </Form>
               ) : (
                 <Message>
-                  Please <Link to="/login">sign in</Link> to write a review
+                  Veuillez vous <Link to="/login">connecter</Link> pour écrire
+                  un commentaire
                 </Message>
               )}
             </ListGroup.Item>

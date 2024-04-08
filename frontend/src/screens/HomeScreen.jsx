@@ -9,6 +9,7 @@ import Message from "../components/Message";
 import Paginate from "../components/Paginate";
 import { useSelector } from "react-redux";
 import ProductCarousel from "../components/ProductCarousel";
+import HeroSection from "../components/HeroSection";
 // import axios from "axios";
 
 const HomeScreen = () => {
@@ -22,7 +23,8 @@ const HomeScreen = () => {
   return (
     <>
       <Meta title={"La Parisienne"} />
-      <h1>Nouveaux Arrivages</h1>
+      <HeroSection />
+      <h1 className="my-3">Nos Articles</h1>
       {!keyword ? (
         ""
       ) : (

@@ -9,14 +9,16 @@ import { useGetOrdersQuery } from "../../slices/ordersApiSlice";
 const OrderListScreen = () => {
   const { data: orders, isLoading, error } = useGetOrdersQuery();
 
-  console.log(orders);
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
 
   return (
     <>
       <h2>Liste de toutes les commandes</h2>
       {isLoading && <Loader />}
       {error && <Message variant="danger">{error?.data?.message}</Message>}
-      <Table striped hover responsive className="table-sm">
+      <Table striped bordered hover responsive className="table-custom">
         <thead>
           <tr>
             <th>ID</th>
@@ -33,9 +35,9 @@ const OrderListScreen = () => {
               <td>{order?._id.substring(0, 10)}</td>
               <td>{order?.user && order?.user?.username.substring(0, 20)}</td>
               <td>{order?.createdAt.substring(0, 10)}</td>
-              <td className="text-info">
+              <td className="text-danger">
                 {" "}
-                <strong> DA {order?.totalPrice} </strong>{" "}
+                <strong> DA {formatPrice(order?.totalPrice)} </strong>{" "}
               </td>
               <td>
                 {order.isPaid ? (

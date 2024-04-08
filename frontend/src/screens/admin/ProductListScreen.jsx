@@ -49,11 +49,15 @@ const ProductListScreen = () => {
       toast.error(error?.data?.message || error?.error);
     }
   };
+
+  const formatPrice = (price) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
   return (
     <div>
       <Row className="align-items-center">
         <Col>
-          <h1>Les Articles Disponibles</h1>
+          <h3>Stock</h3>
         </Col>
         <Col className="text-end">
           <Button className="btn-sm m-3 p-2" onClick={createProductHandler}>
@@ -64,34 +68,34 @@ const ProductListScreen = () => {
       {isLoading && <Loader />}
       {error && <Message variant="danger">{error.data?.message}</Message>}
       <>
-        <Table hover>
+        <Table striped bordered hover responsive className="table-custom">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Article</th>
               <th>Nom</th>
               <th>Prix</th>
-              <th>Category</th>
-              <th></th>
+              <th>Catégorie</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {data?.products?.map((product) => (
               <tr key={product._id}>
-                <td style={{ width: "100px", height: "auto" }}>
-                  <LinkContainer to={`/products/${product._id}`}>
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="img-fluid"
-                    />
-                  </LinkContainer>
+                <td>
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    style={{ width: "70px", height: "auto" }}
+                  />
                 </td>
                 <td>{product.name}</td>
-                <td className="text-info fw-bold">DA {product.price}</td>
+                <td className="text-danger fw-bold">
+                  DA {formatPrice(product.price)}
+                </td>
                 <td>{product.category}</td>
                 <td>
                   <LinkContainer to={`/admin/products/${product._id}/edit`}>
-                    <Button className="btn-sm mx-2 p-2 btn-success">
+                    <Button className="btn-sm mx-2 p-2 btn-light">
                       <FaEdit />
                     </Button>
                   </LinkContainer>
@@ -105,8 +109,20 @@ const ProductListScreen = () => {
                 </td>
               </tr>
             ))}
-            {productCreationLoading && <Loader />}
-            {productDeletionLoading && <Loader />}
+            {productCreationLoading && (
+              <tr>
+                <td colSpan="5" className="text-center">
+                  Loading...
+                </td>
+              </tr>
+            )}
+            {productDeletionLoading && (
+              <tr>
+                <td colSpan="5" className="text-center">
+                  Deleting...
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
         <Paginate

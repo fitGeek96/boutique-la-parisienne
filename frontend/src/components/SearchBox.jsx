@@ -19,34 +19,32 @@ const SearchBox = () => {
   };
 
   return (
-    <Form
-      onSubmit={submitHandler}
-      className="d-flex align-items-center justify-content-center w-20"
-    >
+    <Form onSubmit={submitHandler} className="d-flex flex-row me-5">
+      <Button
+        type="submit"
+        variant="outline-primary"
+        className="me-3 text-white"
+        style={{
+          borderRadius: "20px",
+          padding: "8px",
+          border: "none",
+        }}
+      >
+        <BsSearchHeartFill size={24} />
+      </Button>
       <Form.Control
         type="text"
         name="q"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
-        placeholder="Rechercher un article"
-        className="mr-2"
+        placeholder="Rechercher un article..."
         style={{
           borderRadius: "20px",
-          border: "2px solid #ccc",
-          padding: "8px",
+          border: "none",
+          padding: "8px 15px",
+          width: "100%",
         }}
       />
-      <Button
-        type="submit"
-        variant="outline-primary"
-        className="ms-3 text-white"
-        style={{
-          borderRadius: "20px",
-          padding: "8px",
-        }}
-      >
-        <BsSearchHeartFill size={24} />
-      </Button>
     </Form>
   );
 };

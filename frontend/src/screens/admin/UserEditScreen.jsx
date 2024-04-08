@@ -52,7 +52,7 @@ const UserEditScreen = () => {
         Retour
       </Link>
       <FormContainer>
-        <h1>Éditer les infos de la Cliente</h1>
+        <h3>Éditer les infos de la Cliente</h3>
         {isLoading && <Loader />}
         {isUserLoading && <Loader />}
         {errorUserDetails && (
@@ -88,12 +88,12 @@ const UserEditScreen = () => {
           </Form.Group>
 
           <Button
-            variant="danger"
+            variant="dark"
             type="submit"
             className="w-100 mt-3 px-4 rounded-pill fw-bold"
             style={{ fontSize: "1.2rem" }}
           >
-            Mettre à jour les information de la cliente
+            Mettre à jour
           </Button>
         </Form>
       </FormContainer>
