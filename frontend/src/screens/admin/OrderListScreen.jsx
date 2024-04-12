@@ -25,7 +25,7 @@ const OrderListScreen = () => {
             <th>Cliente</th>
             <th>Date</th>
             <th>Total</th>
-            <th>Payé</th>
+            {/* <th>Payé</th> */}
             <th>Livré</th>
           </tr>
         </thead>
@@ -39,13 +39,13 @@ const OrderListScreen = () => {
                 {" "}
                 <strong> DA {formatPrice(order?.totalPrice)} </strong>{" "}
               </td>
-              <td>
+              {/* <td>
                 {order.isPaid ? (
                   order.paidAt.substring(0, 10)
                 ) : (
                   <FaTimes className="text-danger" />
                 )}
-              </td>
+              </td> */}
               <td>
                 {order.isDelivered ? (
                   order.deliveredAt.substring(0, 10)
