@@ -32,6 +32,8 @@ import ProductListScreen from "./screens/admin/ProductListScreen.jsx";
 import ProductEditScreen from "./screens/admin/ProductEditScreen.jsx";
 import UserListScreen from "./screens/admin/UserListScreen.jsx";
 import UserEditScreen from "./screens/admin/UserEditScreen.jsx";
+import SuccessScreen from "./screens/SuccessScreen.jsx";
+import NotFoundScreen from "./screens/NotFoundScreen.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +49,8 @@ const router = createBrowserRouter(
       <Route path="/cart" element={<CartScreen />} />
       <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
+      <Route path="/success" element={<SuccessScreen />} />
+      <Route path="/failure" element={<NotFoundScreen />} />
 
       <Route path="" element={<PrivateRoute />}>
         <Route path="/payment" element={<PaymentScreen />} />

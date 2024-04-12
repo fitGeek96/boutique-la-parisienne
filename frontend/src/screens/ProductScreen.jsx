@@ -187,8 +187,7 @@ const ProductScreen = () => {
               <ListGroup.Item key={review._id}>
                 <strong>{review.name}</strong>
                 <div className="rating">
-                  <FaStar color="#ffc107" />
-                  <span>{review.rating}</span>
+                  <Rating value={review.rating} />
                 </div>
                 <p>{review.createdAt.substring(0, 10)}</p>
                 <p>{review.comment}</p>

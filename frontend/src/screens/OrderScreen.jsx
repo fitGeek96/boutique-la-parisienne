@@ -1,5 +1,5 @@
-import React, { useEffect, useCallback } from "react";
-import { Link, useParams } from "react-router-dom";
+import React from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   Button,
   ListGroup,
@@ -10,33 +10,29 @@ import {
   Table,
 } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
-  useGetPayPalClientIdQuery,
   useDeliverOrderMutation,
 } from "../slices/ordersApiSlice";
 
 const OrderScreen = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const { id: orderId } = useParams();
   const { data: order, refetch, isLoading, error } = useGetOrderDetailsQuery(
     orderId,
   );
 
-  const {
-    data: paypal,
-    isLoading: loadingPayPal,
-    error: errorPayPal,
-  } = useGetPayPalClientIdQuery();
-  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const [
     payOrder,
     { isLoading: paymentLoading, error: paymentError },
   ] = usePayOrderMutation();
+
   const [
     deliverOrder,
     { isLoading: deliveryLoading, error: deliveryError },
@@ -44,67 +40,9 @@ const OrderScreen = () => {
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if (!errorPayPal && !loadingPayPal && paypal.clientId) {
-      const loadPayPalScript = async () => {
-        paypalDispatch({
-          type: "resetOptions",
-          value: {
-            "client-id": paypal.clientId,
-            currency: "USD",
-          },
-        });
-        paypalDispatch({
-          type: "setLoadingStatus",
-          value: "pending",
-        });
-      };
-
-      if (order && !order.isPaid) {
-        if (!window.paypal) {
-          loadPayPalScript();
-        }
-      }
-    }
-  }, [order, paypal, loadingPayPal, errorPayPal, paypalDispatch]);
-
-  const onApprove = (data, actions) => {
-    return actions.order.capture().then(async (details) => {
-      try {
-        await payOrder(orderId).unwrap();
-        await refetch();
-        toast.success("Payment successful!");
-      } catch (err) {
-        toast.error(err?.data?.message);
-      }
-    });
+  const payOrderHandler = async () => {
+    navigate("/");
   };
-
-  const onPayPalError = (params) => {
-    toast.error("PayPal payment error.");
-  };
-
-  // Inside your component
-
-  const createOrder = useCallback(
-    (data, actions) => {
-      return actions.order
-        .create({
-          purchase_units: [
-            {
-              amount: {
-                currency_code: "USD",
-                value: order?.totalPrice,
-              },
-            },
-          ],
-        })
-        .then((orderId) => {
-          return orderId;
-        });
-    },
-    [order], // Dependency on order
-  );
 
   const deliverOrderHandler = async () => {
     try {
@@ -240,29 +178,24 @@ const OrderScreen = () => {
             </Card.Header>
             <Card.Body>
               <Row className="mb-2 w-100 text-left">
-                <Col as="h5">
-                  Prix Total:{" "}
-                  <strong className="text-danger">
+                <Col as="h5" className="text-center">
+                  <p>Prix Total:</p>
+                  <p className="text-danger fw-bold fs-4">
                     DA {order?.totalPrice}
-                  </strong>
+                  </p>
                 </Col>
               </Row>
               {!order?.isPaid && (
                 <ListGroup.Item>
                   {paymentLoading && <Loader />}
-                  {isPending && <Loader />}
-                  {paymentError && (
-                    <Message variant="danger">
-                      {paymentError?.data?.message}
-                    </Message>
-                  )}
                   <Row>
                     <Col className="text-center">
-                      <PayPalButtons
-                        createOrder={createOrder}
-                        onApprove={onApprove}
-                        onError={onPayPalError}
-                      />
+                      <Button
+                        onClick={payOrderHandler}
+                        variant="danger text-white"
+                      >
+                        Retour au Shopping
+                      </Button>
                     </Col>
                   </Row>
                 </ListGroup.Item>

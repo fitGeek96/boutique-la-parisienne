@@ -74,7 +74,7 @@ const ProductListScreen = () => {
               <th>Article</th>
               <th>Nom</th>
               <th>Prix</th>
-              <th>Catégorie</th>
+              <th>Stock</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -92,7 +92,7 @@ const ProductListScreen = () => {
                 <td className="text-danger fw-bold">
                   DA {formatPrice(product.price)}
                 </td>
-                <td>{product.category}</td>
+                <td>{product.countInStock}</td>
                 <td>
                   <LinkContainer to={`/admin/products/${product._id}/edit`}>
                     <Button className="btn-sm mx-2 p-2 btn-light">

@@ -5,6 +5,7 @@
   "proxy": "http://localhost:5000/",
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
+    "@chargily/chargily-pay": "^2.0.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@paypal/react-paypal-js": "^8.2.0",

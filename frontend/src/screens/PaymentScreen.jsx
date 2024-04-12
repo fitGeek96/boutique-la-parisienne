@@ -8,7 +8,7 @@ import { savePaymentMethod } from "../slices/cartSlice";
 
 const PaymentScreen = () => {
   const [paymentMethod, setPaymentMethod] = useState("");
-  const paymentMethods = ["CIB", "Carte Dahabia", "CCP/baridimob", "Paypal"];
+  const paymentMethods = ["CIB", "Carte Dahabia"];
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

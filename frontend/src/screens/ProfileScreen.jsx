@@ -120,7 +120,6 @@ const ProfileScreen = () => {
               <th>ID</th>
               <th>Date</th>
               <th>Total</th>
-              <th>Payé</th>
               <th>Livré</th>
             </tr>
           </thead>
@@ -133,13 +132,7 @@ const ProfileScreen = () => {
                   {" "}
                   <strong> DA {order?.totalPrice} </strong>{" "}
                 </td>
-                <td>
-                  {order.isPaid ? (
-                    order.paidAt.substring(0, 10)
-                  ) : (
-                    <FaTimes className="text-danger" />
-                  )}
-                </td>
+
                 <td>
                   {order.isDelivered ? (
                     order.deliveredAt.substring(0, 10)
