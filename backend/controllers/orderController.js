@@ -120,6 +120,24 @@ const getOrders = expressAsyncHandler(async (req, res) => {
   res.status(200).json(orders);
 });
 
+// @desc    Delete an Order
+// @route   DELETE  /api/orders
+// @access  Private/Admin
+
+const deleteOrder = expressAsyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  
+  if (order) {
+    await Order.deleteOne({ _id: req.params.id });
+    res.status(200).json({
+      success: true,
+    });
+  } else {
+    res.status(404);
+    throw new Error("Commande introuvable");
+  }
+});
+
 export {
   addOrderItems,
   getMyOrders,
@@ -127,4 +145,5 @@ export {
   updateOrderToPaid,
   updateOrderToDelivered,
   getOrders,
+  deleteOrder,
 };

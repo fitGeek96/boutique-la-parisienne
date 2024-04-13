@@ -1,16 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
 import { FaTimes } from "react-icons/fa";
-import { useGetOrdersQuery } from "../../slices/ordersApiSlice";
+import { MdDeleteSweep } from "react-icons/md";
+
+import {
+  useDeleteOrderMutation,
+  useGetOrdersQuery,
+} from "../../slices/ordersApiSlice";
+import { toast } from "react-toastify";
 
 const OrderListScreen = () => {
-  const { data: orders, isLoading, error } = useGetOrdersQuery();
+  const { data: orders, refetch, isLoading, error } = useGetOrdersQuery();
+  const [
+    deleteOrder,
+    { isLoading: deletingOrder, error: deletingOrderError },
+  ] = useDeleteOrderMutation();
+
+  const [deletingOrderId, setDeletingOrderId] = useState(null);
 
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
+  const handleDelete = async (orderId) => {
+    setDeletingOrderId(orderId);
+    try {
+      await deleteOrder(orderId).unwrap();
+      // Refetch orders after deletion
+      refetch();
+      toast.success("Commande supprimée avec succès");
+    } catch (error) {
+      toast.error(error?.data?.message || error?.error);
+    }
   };
 
   return (
@@ -54,8 +78,24 @@ const OrderListScreen = () => {
                 )}
               </td>
               <td>
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => handleDelete(order?._id)}
+                  disabled={deletingOrderId === order?._id}
+                  className="text-white ms-1"
+                >
+                  <MdDeleteSweep size={20} className="me-2" />
+                  {deletingOrderId === order?._id
+                    ? "Suppression..."
+                    : "Supprimer"}
+                </Button>
                 <LinkContainer to={`/orders/${order?._id}`}>
-                  <Button variant="primary" size="sm" className="text-white">
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="text-white ms-1"
+                  >
                     Voir
                   </Button>
                 </LinkContainer>
