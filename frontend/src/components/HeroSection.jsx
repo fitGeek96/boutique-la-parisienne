@@ -8,7 +8,7 @@ const HeroSection = () => {
         <Row className="align-items-center">
           <Col md={12} className="text-md-start text-center">
             <h2 className="hero-heading">Découvrez votre style avec </h2>
-            <h1 className="hero-heading text-white"> la PARISIENNE </h1>
+            <h1 className="hero-heading text-white"> La Parisienne </h1>
           </Col>
         </Row>
       </Container>

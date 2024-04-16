@@ -52,27 +52,28 @@ const CartScreen = () => {
               {cartItems?.map((item) => (
                 <ListGroup.Item key={item._id} className="border-0">
                   <Row className="align-items-center">
-                    <Col md={3} xs={4} className="text-center">
+                    {/* Adjusted column sizes for mobile */}
+                    <Col xs={12} className="text-center mb-3">
                       <Image
                         src={item.image}
                         alt={item.name}
                         fluid
                         rounded
-                        className="w-100"
+                        className="w-50"
                       />
                     </Col>
-                    <Col md={3} xs={8} className="text-md-start mt-3 mt-md-0">
+                    {/* <Col xs={12} className="text-md-start mt-3">
                       <Link
                         to={`/products/${item._id}`}
                         className="text-decoration-none"
                       >
                         <h6 className="mb-0">{item.name}</h6>
                       </Link>
-                    </Col>
-                    <Col md={2} className="text-center">
+                    </Col> */}
+                    <Col xs={4} className="text-center mt-3">
                       <p className="mb-0">DA {formatPrice(item.price)}</p>
                     </Col>
-                    <Col md={2} xs={6} className="text-center mt-3 mt-md-0">
+                    <Col xs={4} className="text-center mt-3">
                       <Form.Control
                         as="select"
                         value={item.qty}
@@ -88,11 +89,12 @@ const CartScreen = () => {
                         ))}
                       </Form.Control>
                     </Col>
-                    <Col md={2} xs={6} className="text-center mt-3 mt-md-0">
+                    <Col xs={4} className="text-center mt-3 py-3">
                       <Button
                         variant="outline-danger"
                         size="sm"
                         onClick={() => removeFromCartHandler(item._id)}
+                        className="py-2 mt-2"
                       >
                         <FaTrash />
                       </Button>
@@ -109,7 +111,7 @@ const CartScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Prix Total:</Col>
-                  <Col className="text-center">
+                  <Col className="text-center text-danger">
                     <strong>
                       {" "}
                       DA{" "}

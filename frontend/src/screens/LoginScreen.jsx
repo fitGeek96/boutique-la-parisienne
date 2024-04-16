@@ -41,50 +41,53 @@ const LoginScreen = () => {
   }, [userInfo, navigate, redirect]);
 
   return (
-    <FormContainer>
-      <Form onSubmit={submitHandler} className="glass-container mx-auto">
-        <h2>Se Connecter</h2>
+    <>
+      <h2 className="login-headline">La Parisienne</h2>
+      <FormContainer>
+        <Form onSubmit={submitHandler} className="glass-container mx-auto">
+          <h2>Se Connecter</h2>
 
-        <Form.Group controlId="email" className="mb-2">
-          <Form.Label>Adresse e-mail</Form.Label>
-          <Form.Control
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="password">
-          <Form.Label>Mot de passe</Form.Label>
-          <Form.Control
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Form.Group>
-        <Button
-          variant="danger"
-          type="submit"
-          className="mt-3 text-white"
-          disabled={isLoading === true}
-        >
-          Se Connecter
-        </Button>
-        {isLoading && <Loader />}
-        <Row className="mt-3">
-          <Col>
-            <strong>
-              {" "}
-              Nouvelle Cliente?{" "}
-              <Link
-                to={redirect ? `/register?redirect=${redirect}` : "/register"}
-              >
-                S'enregistrer
-              </Link>
-            </strong>
-          </Col>
-        </Row>
-      </Form>
-    </FormContainer>
+          <Form.Group controlId="email" className="mb-2">
+            <Form.Label>Adresse e-mail</Form.Label>
+            <Form.Control
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="password">
+            <Form.Label>Mot de passe</Form.Label>
+            <Form.Control
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Form.Group>
+          <Button
+            variant="danger"
+            type="submit"
+            className="mt-3 text-white w-100"
+            disabled={isLoading === true}
+          >
+            Se Connecter
+          </Button>
+          {isLoading && <Loader />}
+          <Row className="mt-3">
+            <Col>
+              <strong>
+                {" "}
+                Nouvelle Cliente?{" "}
+                <Link
+                  to={redirect ? `/register?redirect=${redirect}` : "/register"}
+                >
+                  S'enregistrer
+                </Link>
+              </strong>
+            </Col>
+          </Row>
+        </Form>
+      </FormContainer>
+    </>
   );
 };
 

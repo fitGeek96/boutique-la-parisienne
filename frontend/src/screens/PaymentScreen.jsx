@@ -8,7 +8,11 @@ import { savePaymentMethod } from "../slices/cartSlice";
 
 const PaymentScreen = () => {
   const [paymentMethod, setPaymentMethod] = useState("");
-  const paymentMethods = ["CIB", "Carte Dahabia"];
+  const paymentMethods = [
+    "Paiement à la livraison",
+    "CIB (bientôt)",
+    "Carte Dahabia (bientôt) ",
+  ];
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -48,6 +52,9 @@ const PaymentScreen = () => {
                   value={method}
                   onChange={(e) => setPaymentMethod(e.target.value)}
                   checked={paymentMethod === method}
+                  disabled={
+                    method === paymentMethods[1] || method === paymentMethods[2]
+                  }
                 />
               </h4>
             ))}

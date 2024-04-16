@@ -89,7 +89,7 @@
   --bs-body-line-height: 1.5;
   --bs-body-color: #7b8a8b;
   --bs-emphasis-color: #000;
-  --bs-emphasis-color-rgb: white;
+  --bs-emphasis-color-rgb: rgb(0, 0, 0);
   --bs-secondary-color: rgba(123, 138, 139, 0.75);
   --bs-secondary-color-rgb: 123, 138, 139;
   --bs-secondary-bg: #bdcecf;
@@ -138,8 +138,8 @@
   --bs-body-color-rgb: 123, 138, 139;
   --bs-body-bg: #7b8a8b;
   --bs-body-bg-rgb: 123, 138, 139;
-  --bs-emphasis-color: #f4f4f4;
-  --bs-emphasis-color-rgb: 244, 244, 244;
+  --bs-emphasis-color: #000000;
+  --bs-emphasis-color-rgb: black;
   --bs-secondary-color: rgba(123, 138, 139, 0.75);
   --bs-secondary-color-rgb: 123, 138, 139;
   --bs-secondary-bg: #7b8a8b;
@@ -148,7 +148,7 @@
   --bs-tertiary-color-rgb: 123, 138, 139;
   --bs-tertiary-bg: #7b8a8b;
   --bs-tertiary-bg-rgb: 123, 138, 139;
-  --bs-emphasis-color: #fff;
+  --bs-emphasis-color: black;
   --bs-primary-text: #8a949e;
   --bs-secondary-text: #b5c0c1;
   --bs-success-text: #74d7c4;

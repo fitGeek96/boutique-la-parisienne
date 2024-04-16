@@ -38,7 +38,7 @@ const Header = () => {
       <Navbar
         expand="lg"
         collapseOnSelect
-        className={userInfo?.isAdmin ? "bg-dark" : "navbar-bg-color"}
+        className={userInfo?.isAdmin ? "bg-success" : "navbar-bg-color"}
       >
         <Container>
           <LinkContainer to="/">
@@ -92,7 +92,7 @@ const Header = () => {
                   </LinkContainer>
                   {userInfo.isAdmin && (
                     <>
-                      <LinkContainer to="/admin/productlist">
+                      <LinkContainer to="/admin/productlist/1">
                         <NavDropdown.Item>
                           <HiShoppingBag className="me-2 align-middle" />
                           Articles

@@ -88,11 +88,11 @@ const ProductListScreen = () => {
                     style={{ width: "70px", height: "auto" }}
                   />
                 </td>
-                <td>{product.name}</td>
-                <td className="text-danger fw-bold">
+                <td className="align-middle">{product.name}</td>
+                <td className="text-danger fw-bold align-middle">
                   DA {formatPrice(product.price)}
                 </td>
-                <td>{product.countInStock}</td>
+                <td className="align-middle">{product.countInStock}</td>
                 <td>
                   <LinkContainer to={`/admin/products/${product._id}/edit`}>
                     <Button className="btn-sm mx-2 p-2 btn-light">

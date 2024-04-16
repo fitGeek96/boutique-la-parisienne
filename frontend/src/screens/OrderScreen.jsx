@@ -40,8 +40,8 @@ const OrderScreen = () => {
 
   const { userInfo } = useSelector((state) => state.auth);
 
-  const payOrderHandler = async () => {
-    navigate("/");
+  const formatPrice = (price) => {
+    return price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   const deliverOrderHandler = async () => {
@@ -66,7 +66,7 @@ const OrderScreen = () => {
       </h3>
       <Row>
         <Col md={9}>
-          <Card>
+          <Card className="order-details-card">
             <Card.Header>
               <h4 className="text-info">Informations sur la livraison</h4>
             </Card.Header>
@@ -98,7 +98,7 @@ const OrderScreen = () => {
                     <td>
                       {order?.isDelivered ? (
                         <p className="text-success">
-                          <strong> La Commande a bien été effectuée </strong>
+                          <strong> La Commande a bien été livrée </strong>
                         </p>
                       ) : (
                         <p className="text-danger">
@@ -107,26 +107,13 @@ const OrderScreen = () => {
                       )}
                     </td>
                   </tr>
-                  <tr>
-                    <td>Statut de Paiment</td>
-                    <td>
-                      {order?.isPaid ? (
-                        <p className="text-success">
-                          <strong> La commande est payée avec succès</strong>
-                        </p>
-                      ) : (
-                        <p className="text-danger">
-                          <strong> La commande n'est pas encore payée</strong>
-                        </p>
-                      )}
-                    </td>
-                  </tr>
+                  <tr></tr>
                 </tbody>
               </Table>
             </Card.Body>
           </Card>
           <ListGroup.Item className="mt-2">
-            <Card>
+            <Card className="order-details-card">
               <Card.Header>
                 <h4 className="text-info">Articles commandés</h4>
               </Card.Header>
@@ -170,7 +157,7 @@ const OrderScreen = () => {
           </ListGroup.Item>
         </Col>
         <Col md={3}>
-          <Card>
+          <Card className="order-details-card">
             <Card.Header>
               <h5 className="text-center text-info mb-4">
                 Tarification de la commande
@@ -181,25 +168,10 @@ const OrderScreen = () => {
                 <Col as="h5" className="text-center">
                   <p>Prix Total:</p>
                   <p className="text-danger fw-bold fs-4">
-                    DA {order?.totalPrice}
+                    DA {formatPrice(order?.totalPrice)}
                   </p>
                 </Col>
               </Row>
-              {!order?.isPaid && (
-                <ListGroup.Item>
-                  {paymentLoading && <Loader />}
-                  <Row>
-                    <Col className="text-center">
-                      <Button
-                        onClick={payOrderHandler}
-                        variant="danger text-white"
-                      >
-                        Retour au Shopping
-                      </Button>
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-              )}
 
               {userInfo && userInfo.isAdmin && !order?.isDelivered && (
                 <ListGroup.Item>
@@ -212,7 +184,7 @@ const OrderScreen = () => {
                   <Row>
                     <Col className="text-center">
                       <Button
-                        variant="warning btn-outline-info text-white fw-bold"
+                        variant="info btn-outline-info text-white fw-bold"
                         onClick={deliverOrderHandler}
                       >
                         Marquer comme livré
