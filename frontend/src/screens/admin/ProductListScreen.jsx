@@ -60,8 +60,11 @@ const ProductListScreen = () => {
           <h3>Stock</h3>
         </Col>
         <Col className="text-end">
-          <Button className="btn-sm m-3 p-2" onClick={createProductHandler}>
-            <FaEdit /> Ajouter un article
+          <Button
+            className="btn-sm m-3 p-2 tw-flex tw-gap-1 tw-float-end"
+            onClick={createProductHandler}
+          >
+            <FaEdit className="align-self-center" /> Ajouter un article
           </Button>
         </Col>
       </Row>
@@ -85,7 +88,7 @@ const ProductListScreen = () => {
                   <img
                     src={product.image}
                     alt={product.name}
-                    style={{ width: "70px", height: "auto" }}
+                    className="tw-mx-auto tw-rounded-lg tw-w-[70px]"
                   />
                 </td>
                 <td className="align-middle">{product.name}</td>

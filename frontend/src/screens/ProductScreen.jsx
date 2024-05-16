@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
   Col,
-  Image,
   ListGroup,
   Card,
   Button,
   Form,
+  Carousel,
+  Image,
 } from "react-bootstrap";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Rating from "../components/Rating";
@@ -25,12 +26,53 @@ import { FaStar, FaComment, FaArrowLeft } from "react-icons/fa";
 const ProductScreen = () => {
   const { id: productId } = useParams();
 
-  const [qty, setQty] = useState(1);
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const statesWithShippingPrices = {
+    tipaza: 600,
+    medea: 600,
+    blida: 600,
+    bouira: 600,
+    "tizi ouzou": 600,
+    constantine: 600,
+    bejaia: 600,
+    skikda: 600,
+    oran: 600,
+    mila: 600,
+    mascara: 600,
+    setif: 600,
+    mostaganem: 600,
+    tlemcen: 700,
+    "sidi bel abbes": 700,
+    "ain temouchent": 700,
+    guelma: 700,
+    relizane: 700,
+    "oum el bouaghi": 700,
+    chlef: 700,
+    tissemsilt: 700,
+    jijel: 700,
+    "borjd bou ariridj": 700,
+    batna: 700,
+    tiaret: 750,
+    saida: 750,
+    annaba: 750,
+    "el tarf": 750,
+    "souk ahras": 800,
+    msila: 800,
+    tebessa: 900,
+    biskra: 900,
+    "el oued": 900,
+    ouergla: 900,
+    "ouled djellal": 900,
+    khenchla: 900,
+    "el mghaier": 900,
+    tougourt: 900,
+    ghardaia: 900,
+    laghouat: 900,
+    djelfa: 900,
+    bechar: 1000,
+    naama: 1000,
+    "el bayadh": 1000,
+    alger: 400,
+  };
 
   const {
     data: product,
@@ -38,6 +80,22 @@ const ProductScreen = () => {
     isError,
     refetch,
   } = useGetProductDetailsQuery(productId);
+
+  const [qty, setQty] = useState(0);
+  const [size, setSize] = useState(0);
+  const [color, setColor] = useState("...");
+  const [city, setCity] = useState("...");
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [shippingPrice, setShippingPrice] = useState(0);
+
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
 
   const [
     createReview,
@@ -47,42 +105,41 @@ const ProductScreen = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const userId = userInfo?._id;
 
-  const addToCartHandler = () => {
+  const formatPrice = (price) => {
+    return price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
+  const calculateTotalPrice = (productPrice, qty, city) => {
+    const shippingPrice = statesWithShippingPrices[city?.toLowerCase()] || 0;
+    return productPrice * qty + shippingPrice;
+  };
+
+  const addToCartHandler = (product, qty, size, color, newCity) => {
+    const newTotalPrice = calculateTotalPrice(product?.price, qty, newCity);
+
+    setTotalPrice(newTotalPrice);
+
     dispatch(
       addToCart({
         ...product,
         qty,
+        size,
+        color,
+        shippingPrice,
+        totalPrice: newTotalPrice,
       }),
     );
-    navigate("/cart");
   };
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    try {
-      await createReview({
-        productId,
-        rating,
-        comment,
-      }).unwrap();
-      refetch();
-      toast.success("Votre commentaire a été envoyé");
-      setRating(0);
-      setComment("");
-    } catch (error) {
-      toast.error(error?.data?.message || error?.error);
-    }
-  };
-
-  const formatPrice = (price) => {
-    return price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
+  useEffect(() => {
+    setShippingPrice(statesWithShippingPrices[city.toLowerCase()] || 0);
+  }, [city]);
 
   return (
     <>
       <Meta title={product?.name} />
       <Link to="/" className="btn btn-light my-3 ms-3">
-        <FaArrowLeft /> Retour
+        <FaArrowLeft />
       </Link>
       {isLoading && <Loader />}
       {isError && (
@@ -92,24 +149,32 @@ const ProductScreen = () => {
       )}
       <Row>
         <Col md={5}>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-              <Image src={product?.image} alt={product?.name} fluid rounded />
-            </ListGroup.Item>
-          </ListGroup>
+          <Image
+            src={product?.image}
+            alt={product?.name}
+            fluid
+            className="tw-rounded-[3rem]"
+          />
         </Col>
+
         <Col md={4}>
           <ListGroup variant="flush">
-            <ListGroup.Item as="h4">{product?.name}</ListGroup.Item>
-            <ListGroup.Item>
+            <ListGroup.Item
+              as="h4"
+              className="tw-text-pink-300 xs:tw-text-[2rem] tw-font-semibold"
+            >
+              {product?.name}
+            </ListGroup.Item>
+            {/* <ListGroup.Item>
               <div className="rating">
                 <FaStar color="#ffc107" />
                 <span>{product?.rating}</span>
                 <span className="ms-1">({product?.numReviews} avis)</span>
               </div>
-            </ListGroup.Item>
+            </ListGroup.Item> */}
             <ListGroup.Item>
-              <strong>Description:</strong> {product?.description}
+              <strong>Description:</strong> <br />
+              <h4>{product?.description}</h4>
             </ListGroup.Item>
           </ListGroup>
         </Col>
@@ -119,7 +184,7 @@ const ProductScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Prix:</Col>
-                  <Col className="text-center">
+                  <Col className="text-center text-black" as={"h6"}>
                     <strong>DA {formatPrice(product?.price)}</strong>
                   </Col>
                 </Row>
@@ -127,7 +192,7 @@ const ProductScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Etat:</Col>
-                  <Col className="text-center">
+                  <Col className="text-center text-black">
                     <strong>
                       {product?.countInStock > 0
                         ? "Disponible"
@@ -144,14 +209,23 @@ const ProductScreen = () => {
                       <Form.Control
                         as="select"
                         value={qty}
-                        onChange={(e) => setQty(Number(e.target.value))}
+                        onChange={(e) => {
+                          const newQty = Number(e.target.value);
+                          setQty(newQty);
+                          const newTotalPrice = calculateTotalPrice(
+                            product?.price,
+                            newQty,
+                            city,
+                          );
+                          setTotalPrice(newTotalPrice);
+                        }}
                         className="text-center p-0 m-auto w-50"
                       >
                         {Array.from(
                           { length: product?.countInStock },
                           (v, i) => (
-                            <option key={i} value={i + 1}>
-                              {i + 1}
+                            <option key={i} value={i}>
+                              {i}
                             </option>
                           ),
                         )}
@@ -160,12 +234,158 @@ const ProductScreen = () => {
                   </Row>
                 </ListGroup.Item>
               )}
+
+              {product?.category.toLowerCase().trim() === "baskets" && (
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Pointure:</Col>
+                    <Col>
+                      <Form.Control
+                        as="select"
+                        value={size}
+                        onChange={(e) => {
+                          setSize(e.target.value);
+                          addToCartHandler(product, qty, e.target.value, color);
+                        }}
+                        className="text-center p-0 m-auto w-50"
+                      >
+                        <option value="">...</option>
+                        {product?.size &&
+                          product.size.map((size) => (
+                            <option key={size} value={size}>
+                              {size}
+                            </option>
+                          ))}
+                      </Form.Control>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              )}
+
+              {/* 
+              <ListGroup.Item>
+                <Row>
+                  <Col>Couleur:</Col>
+                  <Col>
+                    <Form.Control
+                      as="select"
+                      value={color}
+                      onChange={(e) => {
+                        setColor(e.target.value);
+                      }}
+                      className="text-center p-0 m-auto w-50"
+                    >
+                      {product?.color.map((color) => (
+                        <option key={color} value={color}>
+                          {color}
+                        </option>
+                      ))}
+                    </Form.Control>
+                  </Col>
+                </Row>
+              </ListGroup.Item> */}
+              <ListGroup.Item>
+                <Row>
+                  <Col>Wilaya:</Col>
+                  <Col>
+                    <Form.Control
+                      as="select"
+                      value={city}
+                      onChange={(e) => {
+                        const newCity = e.target.value;
+                        setCity(newCity);
+                        const newTotalPrice = calculateTotalPrice(
+                          product?.price,
+                          qty,
+                          newCity,
+                        );
+
+                        setTotalPrice(newTotalPrice);
+                        addToCartHandler(product, qty, size, color, newCity);
+                      }}
+                      className="text-center p-0 m-auto w-50"
+                    >
+                      <option value="">...</option>
+                      <option value="tipaza">Tipaza</option>
+                      <option value="medea">Medea</option>
+                      <option value="blida">Blida</option>
+                      <option value="bouira">Bouira</option>
+                      <option value="tizi ouzou">Tizi Ouzou</option>
+                      <option value="constantine">Constantine</option>
+                      <option value="bejaia">Bejaia</option>
+                      <option value="skikda">Skikda</option>
+                      <option value="oran">Oran</option>
+                      <option value="mila">Mila</option>
+                      <option value="mascara">Mascara</option>
+                      <option value="setif">Setif</option>
+                      <option value="mostaganem">Mostaganem</option>
+                      <option value="tlemcen">Tlemcen</option>
+                      <option value="sidi bel abbes">Sidi Bel Abbes</option>
+                      <option value="ain temouchent">Ain Temouchent</option>
+                      <option value="guelma">Guelma</option>
+                      <option value="relizane">Relizane</option>
+                      <option value="oum el bouaghi">Oum El Bouaghi</option>
+                      <option value="chlef">Chlef</option>
+                      <option value="tissemsilt">Tissemsilt</option>
+                      <option value="jijel">Jijel</option>
+                      <option value="borjd bou ariridj">
+                        Borjd Bou Ariridj
+                      </option>
+                      <option value="batna">Batna</option>
+                      <option value="tiaret">Tiaret</option>
+                      <option value="saida">Saida</option>
+                      <option value="annaba">Annaba</option>
+                      <option value="el tarf">El Tarf</option>
+                      <option value="souk ahras">Souk Ahras</option>
+                      <option value="msila">Msila</option>
+                      <option value="tebessa">Tebessa</option>
+                      <option value="biskra">Biskra</option>
+                      <option value="el oued">El Oued</option>
+                      <option value="ouergla">Ouergla</option>
+                      <option value="ouled djellal">Ouled Djellal</option>
+                      <option value="khenchla">Khenchla</option>
+                      <option value="el mghaier">El Mghaier</option>
+                      <option value="tougourt">Tougourt</option>
+                      <option value="ghardaia">Ghardaia</option>
+                      <option value="laghouat">Laghouat</option>
+                      <option value="djelfa">Djelfa</option>
+                      <option value="bechar">Bechar</option>
+                      <option value="naama">Naama</option>
+                      <option value="el bayadh">El Bayadh</option>
+                      <option value="alger">Alger</option>
+                      {/* Add other options for all states */}
+                    </Form.Control>
+                  </Col>
+                </Row>
+              </ListGroup.Item>
+
+              <ListGroup.Item>
+                <Row>
+                  <Col>Prix de Livraison:</Col>
+                  <Col className="text-center text-danger">
+                    <strong>
+                      DA <span> {formatPrice(shippingPrice)}</span>
+                    </strong>
+                  </Col>
+                </Row>
+              </ListGroup.Item>
+
+              <ListGroup.Item>
+                <Row>
+                  <Col>Prix Total:</Col>
+                  <Col className="text-center text-danger">
+                    <strong>
+                      DA <span> {formatPrice(totalPrice)}</span>
+                    </strong>
+                  </Col>
+                </Row>
+              </ListGroup.Item>
               <ListGroup.Item className="text-center">
                 <Button
                   variant="danger text-white"
                   size="lg"
                   disabled={product?.countInStock === 0}
-                  onClick={addToCartHandler}
+                  onClick={() => navigate("/shipping")}
                 >
                   Ajouter au panier
                 </Button>
@@ -174,7 +394,7 @@ const ProductScreen = () => {
           </Card>
         </Col>
       </Row>
-      <Row className="review">
+      {/* <Row className="review">
         <Col md={6}>
           <h2>
             <FaComment /> Commentaires
@@ -242,7 +462,7 @@ const ProductScreen = () => {
             </ListGroup.Item>
           </ListGroup>
         </Col>
-      </Row>
+      </Row> */}
     </>
   );
 };

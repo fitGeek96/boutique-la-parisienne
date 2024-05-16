@@ -52,13 +52,12 @@ const router = createBrowserRouter(
       <Route path="/success" element={<SuccessScreen />} />
       <Route path="/failure" element={<NotFoundScreen />} />
 
-      <Route path="" element={<PrivateRoute />}>
-        <Route path="/payment" element={<PaymentScreen />} />
-        <Route path="/shipping" element={<ShippingScreen />} />
-        <Route path="/placeorder" element={<PlaceOrder />} />
-        <Route path="/orders/:id" element={<OrderScreen />} />
-        <Route path="/profile" element={<ProfileScreen />} />
-      </Route>
+      <Route path="/payment" element={<PaymentScreen />} />
+      <Route path="/shipping" element={<ShippingScreen />} />
+      <Route path="/placeorder" element={<PlaceOrder />} />
+      <Route path="/orders/:id" element={<OrderScreen />} />
+      <Route path="/profile" element={<ProfileScreen />} />
+
       <Route path="" element={<AdminRoute />}>
         <Route path="/admin/orderlist" element={<OrderListScreen />} />
         <Route path="/admin/userlist" element={<UserListScreen />} />

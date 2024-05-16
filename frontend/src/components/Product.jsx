@@ -18,9 +18,8 @@ const Product = ({ product }) => {
             <strong>{product.name}</strong>
           </Link>
         </Card.Title>
-        <Card.Text as={"h6"}>
+        <Card.Text as={"h6"} className="tw-text-pink-500 tw-font-semibold">
           DA {formatPrice(product.price)}
-          <Rating value={product.rating} text={product.numReviews} />
         </Card.Text>
       </Card.Body>
     </Card>

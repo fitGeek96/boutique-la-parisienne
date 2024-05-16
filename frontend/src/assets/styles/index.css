@@ -1,6 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Reem+Kufi+Fun:wght@400..700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Fleur+De+Leah&display=swap");
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
   font-family: "Reem Kufi Fun", sans-serif;
   font-optical-sizing: auto;
@@ -160,10 +164,6 @@ table th {
   background: rgba(0, 0, 0, 0.5);
 }
 
-.navbar-bg-color {
-  background: rgba(218, 112, 214, 0.5); /* Light Pink (variant of purple) */
-}
-
 .glass-container {
   background: rgba(255, 255, 255, 0.5); /* Glass effect */
   border-radius: 20px; /* Adjust the radius as needed */
@@ -205,14 +205,6 @@ table th {
   color: #fff;
   background-color: #ff6a00;
   border-color: #ff6a00;
-}
-
-@media (max-width: 767px) {
-  header {
-    background: url("../headerBackG.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
 }
 
 @media only screen and (max-width: 375px) {

@@ -34,7 +34,8 @@ const PlaceOrder = () => {
         shippingAddress: cart.shippingAddress,
         paymentMethod: cart.paymentMethod,
         itemsPrice: cart.itemsPrice,
-        totalPrice: cart.totalPrice,
+        shippingPrice: cart.cartItems[0].shippingPrice,
+        totalPrice: cart.cartItems[0].totalPrice,
       }).unwrap();
 
       dispatch(clearCartItems());
@@ -46,32 +47,42 @@ const PlaceOrder = () => {
     }
   };
 
+  const formatPrice = (price) => {
+    return price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   return (
     <>
-      <CheckoutSteps step1 step2 step3 step4 />
+      {/* <CheckoutSteps step1 step2 step3 step4 /> */}
       <Row>
         <Col md={3}></Col>
         <Col md={6} className="mt-2">
           <Card>
             <Card.Body>
-              <h5 className="text-center text-info mb-4">
-                Récapitulatif de la commande
-              </h5>
+              <h5 className="text-center text-info mb-4">Livraison Au</h5>
               <ListGroup variant="flush">
                 <ListGroup.Item>
                   <Row className="mt-1">
-                    <Col xs={6} md={6}>
+                    <Col xs={12} md={6}>
                       Nom et prénom:
                     </Col>
-                    <Col xs={6} md={6} className="text-md-center">
+                    <Col
+                      xs={12}
+                      md={6}
+                      className="text-md-center text-black fw-bold"
+                    >
                       <strong>{cart.shippingAddress?.fullname}</strong>
                     </Col>
                   </Row>
                   <Row className="mt-1">
-                    <Col xs={6} md={6}>
+                    <Col xs={12} md={6}>
                       Adresse:
                     </Col>
-                    <Col xs={6} md={6} className="text-md-center">
+                    <Col
+                      xs={12}
+                      md={6}
+                      className="text-md-center text-black fw-bold"
+                    >
                       <strong>
                         {cart.shippingAddress?.address},{" "}
                         {cart.shippingAddress?.city}
@@ -79,35 +90,37 @@ const PlaceOrder = () => {
                     </Col>
                   </Row>
                   <Row className="mt-1">
-                    <Col xs={6} md={6}>
+                    <Col xs={12} md={6}>
                       Tel :
                     </Col>
-                    <Col xs={6} md={6} className="text-md-center">
+                    <Col
+                      xs={12}
+                      md={6}
+                      className="text-md-center text-black fw-bold"
+                    >
                       <strong>{cart.shippingAddress?.phone}</strong>
                     </Col>
                   </Row>
                   <Row className="mt-1">
-                    <Col xs={6} md={6}>
+                    <Col xs={12} md={6}>
                       Prix ​​total:
                     </Col>
-                    <Col xs={6} md={6} className="text-md-center text-danger">
-                      <strong>DA {cart.totalPrice}</strong>
+                    <Col xs={12} md={6} className="text-md-center text-danger">
+                      <strong>
+                        DA {formatPrice(cart?.cartItems[0]?.totalPrice)}
+                      </strong>
                     </Col>
                   </Row>
                 </ListGroup.Item>
-                <ListGroup.Item>
-                  {error && (
-                    <Message variant="danger">{error.data.message}</Message>
-                  )}
-                </ListGroup.Item>
+
                 <ListGroup.Item>
                   <Row className="justify-content-center mt-3">
                     <Button
                       variant="danger text-white"
-                      disabled={cart.cartItems?.length === 0}
+                      disabled={cart.totalPrice === 0}
                       onClick={placeOrderHandler}
                     >
-                      Passer la commande
+                      Confirmer La Commande
                     </Button>
                     {isLoading && <Loader />}
                   </Row>

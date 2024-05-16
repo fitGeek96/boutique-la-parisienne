@@ -77,13 +77,13 @@ const OrderListScreen = () => {
                   <FaTimes className="text-danger" />
                 )}
               </td>
-              <td>
+              <td className="tw-flex tw-flex-row tw-justify-center tw-gap-1 text-white">
                 <Button
                   variant="danger"
                   size="sm"
                   onClick={() => handleDelete(order?._id)}
                   disabled={deletingOrderId === order?._id}
-                  className="text-white ms-1"
+                  className="tw-flex tw-flex-row tw-gap-1 text-white"
                 >
                   <MdDeleteSweep size={20} className="me-2" />
                   {deletingOrderId === order?._id

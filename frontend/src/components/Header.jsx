@@ -38,11 +38,15 @@ const Header = () => {
       <Navbar
         expand="lg"
         collapseOnSelect
-        className={userInfo?.isAdmin ? "bg-success" : "navbar-bg-color"}
+        className={
+          userInfo?.isAdmin
+            ? "bg-success"
+            : "tw-bg-gradient-to-r tw-from-pink-500 tw-to-pink-200"
+        }
       >
         <Container>
           <LinkContainer to="/">
-            <Navbar.Brand className="p-0 m-0">
+            <Navbar.Brand className="p-0 m-0 tw-text-red">
               <img src={logo} alt="Logo" width={70} height={70} />
             </Navbar.Brand>
           </LinkContainer>
@@ -59,14 +63,14 @@ const Header = () => {
               {userInfo && !userInfo.isAdmin && (
                 <>
                   <SearchBox />
-                  <LinkContainer to="/" className="text-white">
+                  <LinkContainer to="/" className="tw-flex tw-flex-row">
                     <Nav.Link>Shop</Nav.Link>
                   </LinkContainer>
                 </>
               )}
 
               <LinkContainer to="/cart">
-                <Nav.Link className="position-relative text-white">
+                <Nav.Link className="tw-flex tw-flex-row tw-gap-1">
                   <FaShoppingCart size={20} />
                   {cartItems.length > 0 && (
                     <>
@@ -79,33 +83,33 @@ const Header = () => {
                       </Badge>
                     </>
                   )}
-                  <span className="ms-1 align-middle">Panier</span>
+                  <span>Panier</span>
                 </Nav.Link>
               </LinkContainer>
 
               {userInfo ? (
                 <NavDropdown title={userInfo.username}>
                   <LinkContainer to="/profile">
-                    <NavDropdown.Item>
-                      <FaUser className="me-2 align-middle" /> Profile
+                    <NavDropdown.Item className="tw-flex tw-flex-row tw-gap-1">
+                      <FaUser className="me-2" /> Profile
                     </NavDropdown.Item>
                   </LinkContainer>
                   {userInfo.isAdmin && (
                     <>
                       <LinkContainer to="/admin/productlist/1">
-                        <NavDropdown.Item>
+                        <NavDropdown.Item className="tw-flex tw-flex-row tw-gap-1">
                           <HiShoppingBag className="me-2 align-middle" />
                           Articles
                         </NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/orderlist">
-                        <NavDropdown.Item>
+                        <NavDropdown.Item className="tw-flex tw-flex-row tw-gap-1">
                           <TbTruckDelivery className="me-2 align-middle" />
                           Commandes
                         </NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/userlist">
-                        <NavDropdown.Item>
+                        <NavDropdown.Item className="tw-flex tw-flex-row tw-gap-1">
                           <TiGroup className="me-2 align-middle" />
                           Les Clientes
                         </NavDropdown.Item>
@@ -113,7 +117,10 @@ const Header = () => {
                     </>
                   )}
                   <LinkContainer to="/logout">
-                    <NavDropdown.Item onClick={logoutHandler}>
+                    <NavDropdown.Item
+                      onClick={logoutHandler}
+                      className="tw-flex tw-flex-row tw-gap-1"
+                    >
                       <CgLogOut />
                       Se déconnecter
                     </NavDropdown.Item>
@@ -121,9 +128,9 @@ const Header = () => {
                 </NavDropdown>
               ) : (
                 <LinkContainer to="/login">
-                  <Nav.Link>
+                  <Nav.Link className="tw-flex tw-flex-row tw-gap-1">
                     <FaUser />
-                    <span className="ms-1 align-middle">Se connecter</span>
+                    <span>Se connecter</span>
                   </Nav.Link>
                 </LinkContainer>
               )}

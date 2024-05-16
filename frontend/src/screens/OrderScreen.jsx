@@ -61,7 +61,7 @@ const OrderScreen = () => {
     <>
       {isLoading && <Loader />}
       {error && <Message variant="danger">{error.data?.message}</Message>}
-      <h3 className="text-warning">
+      <h3 className="text-warning mb-4 tw-text-bold tw-text-[1.5rem] tw-font-bold">
         ID Commande : {order?._id?.substring(0, 10)}
       </h3>
       <Row>
@@ -75,13 +75,13 @@ const OrderScreen = () => {
                 <tbody>
                   <tr>
                     <td>Nom et Prenom</td>
-                    <td>
+                    <td className="text-black">
                       <strong>{order?.shippingAddress?.fullname}</strong>
                     </td>
                   </tr>
                   <tr>
                     <td>Adresse</td>
-                    <td>
+                    <td className="text-black">
                       <strong>
                         {`${order?.shippingAddress?.address}, ${order?.shippingAddress?.city}`}
                       </strong>
@@ -89,7 +89,7 @@ const OrderScreen = () => {
                   </tr>
                   <tr>
                     <td>Numéro de Téléphone</td>
-                    <td>
+                    <td className="text-black">
                       <strong>{order?.shippingAddress?.phone}</strong>
                     </td>
                   </tr>
@@ -124,29 +124,40 @@ const OrderScreen = () => {
                   <Table hover responsive className="table-sm">
                     <thead>
                       <tr>
-                        <th>Image</th>
-                        <th>Nom</th>
+                        <th className="text-left">Image</th>
+                        {order?.orderItems[0]?.category
+                          ?.toLowerCase()
+                          .trim() === "baskets" && (
+                          <th className="">Pointure</th>
+                        )}
                         <th className="text-center">Quantité</th>
                       </tr>
                     </thead>
                     <tbody>
                       {order?.orderItems?.map((item) => (
-                        <tr key={item.product} className="text-left">
-                          <td className="align-middle">
-                            <Image
+                        <tr
+                          key={item.product}
+                          className="grid tw-place-items-center"
+                        >
+                          <td>
+                            <img
                               src={item.image}
                               alt={item.name}
-                              fluid
-                              rounded
-                              style={{ width: "80px", height: "auto" }}
+                              className="tw-w-[80px] tw-mx-auto tw-rounded-lg"
                             />
                           </td>
-                          <td className="align-middle">
-                            <Link to={`/products/${item.product}`}>
-                              {item.name}
-                            </Link>
+                          {item?.category?.toLowerCase().trim() ===
+                            "baskets" && (
+                            <td className="tw-text-[1.5rem] tw-font-bold text-center">
+                              <Link to={`/products/${item.product}`}>
+                                {item.size}
+                              </Link>
+                            </td>
+                          )}
+
+                          <td className="tw-text-[1.5rem] tw-font-bold text-center">
+                            {item?.qty}
                           </td>
-                          <td className="align-middle">{item.qty}</td>
                         </tr>
                       ))}
                     </tbody>

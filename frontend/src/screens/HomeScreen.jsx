@@ -24,7 +24,9 @@ const HomeScreen = () => {
     <>
       <Meta title={"La Parisienne"} />
       <HeroSection />
-      <h1 className="my-3">Nos Articles</h1>
+      <h1 className="tw-font-bold tw-text-[2rem] tw-text-pink-500 tw-my-5">
+        Nos Articles
+      </h1>
       {!keyword ? (
         ""
       ) : (
