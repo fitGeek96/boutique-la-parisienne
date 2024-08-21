@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Form, Button, InputGroup } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  InputGroup,
+  Dropdown,
+  DropdownButton,
+} from "react-bootstrap";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import FormContainer from "../../components/FormContainer";
@@ -20,6 +26,8 @@ const ProductEditScreen = () => {
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [countInStock, setCountInStock] = useState(0);
+  const [promotion, setPromotion] = useState(0); // New state for promotion
+  const [discountedPrice, setDiscountedPrice] = useState(0);
 
   const {
     data: product,
@@ -49,13 +57,19 @@ const ProductEditScreen = () => {
     }
   }, [product]);
 
+  const applyPromotion = (discount) => {
+    setPromotion(discount);
+    const newPrice = price * (1 - discount / 100);
+    setDiscountedPrice(newPrice);
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       await updateProduct({
         _id: productId,
         name,
-        price,
+        price: discountedPrice || price,
         image,
         brand,
         category,
@@ -122,6 +136,27 @@ const ProductEditScreen = () => {
                 className="rounded-end"
               />
             </InputGroup>
+            <div className="prixPromo mt-2">
+              <h3 className="text-danger">Prix + Promotion:</h3>
+              <h4 className="tw-text-slate-950 mt-2">
+                DZD {discountedPrice || price}
+              </h4>
+            </div>
+          </Form.Group>
+          <Form.Group controlId="formBasicPromotion" className="mb-3">
+            <Form.Label as="h4" className="text-primary">
+              Promotion
+            </Form.Label>
+            <DropdownButton
+              id="dropdown-basic-button"
+              title={`Appliquer une promotion (${promotion || 0}%)`}
+              onSelect={(e) => applyPromotion(parseInt(e))}
+            >
+              <Dropdown.Item eventKey="0">0% Promotion</Dropdown.Item>
+              <Dropdown.Item eventKey="10">10% Promotion</Dropdown.Item>
+              <Dropdown.Item eventKey="20">20% Promotion</Dropdown.Item>
+              <Dropdown.Item eventKey="30">30% Promotion</Dropdown.Item>
+            </DropdownButton>
           </Form.Group>
           <Form.Group controlId="formBasicDescription" className="mb-3">
             <Form.Label as="h4" className="text-primary">
@@ -140,13 +175,6 @@ const ProductEditScreen = () => {
             <Form.Label as="h4" className="text-primary">
               Image
             </Form.Label>
-            {/* <Form.Control
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-              type="text"
-              placeholder="Enter image URL"
-              className="rounded-pill"
-            ></Form.Control> */}
             <Form.Control
               type="file"
               label="Choisir un fichier"
